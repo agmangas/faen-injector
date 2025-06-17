@@ -1,0 +1,1334 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Data Cellar Spanish VC API",
+    "description": "The HTTP API for the Spanish Validation Case of Data Cellar.",
+    "contact": {
+      "name": "Andrés García Mangas",
+      "url": "https://github.com/fundacionctic",
+      "email": "andres.garcia@fundacionctic.org"
+    },
+    "version": "0.9.0"
+  },
+  "paths": {
+    "/token": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Login For Access Token",
+        "description": "Obtain an access token for a given user.",
+        "operationId": "login_for_access_token_token_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_for_access_token_token_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Token" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me/": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Read Users Me",
+        "description": "Get the current user.",
+        "operationId": "read_users_me_users_me__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/consumption/": {
+      "get": {
+        "tags": ["Historical consumption"],
+        "summary": "Query Consumption",
+        "description": "Query consumption data.",
+        "operationId": "query_consumption_consumption__get",
+        "parameters": [
+          {
+            "description": "A MongoDB query document serialized in MongoDB Extended JSON format.",
+            "required": true,
+            "schema": {
+              "title": "Query",
+              "type": "string",
+              "description": "A MongoDB query document serialized in MongoDB Extended JSON format."
+            },
+            "example": "{\"datetime\": {\"$gte\": {\"$date\": \"2022-07-13T16:00:00+0200\"}, \"$lte\": {\"$date\": \"2022-07-15T16:00:00+0200\"}}}",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": { "title": "Limit", "type": "integer", "default": 100 },
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "description": "Sort key.",
+            "required": false,
+            "schema": {
+              "title": "Sort",
+              "type": "string",
+              "description": "Sort key."
+            },
+            "example": "+datetime",
+            "name": "sort",
+            "in": "query"
+          },
+          {
+            "description": "Whether to return consumption data modeled as a dataset compliant with the EUMED metering data model in JSON-LD format.",
+            "required": false,
+            "schema": {
+              "title": "Eumed",
+              "type": "boolean",
+              "description": "Whether to return consumption data modeled as a dataset compliant with the EUMED metering data model in JSON-LD format.",
+              "default": false
+            },
+            "name": "eumed",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Query Consumption Consumption  Get",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ConsumptionSample"
+                      }
+                    },
+                    { "type": "array", "items": { "type": "object" } },
+                    { "type": "object" }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/consumption/query": {
+      "post": {
+        "tags": ["Historical consumption"],
+        "summary": "Post Query Consumption",
+        "description": "Query consumption data using a POST request.",
+        "operationId": "post_query_consumption_consumption_query_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryConsumptionRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Post Query Consumption Consumption Query Post",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ConsumptionSample"
+                      }
+                    },
+                    { "type": "array", "items": { "type": "object" } },
+                    { "type": "object" }
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/consumption/average/day": {
+      "get": {
+        "tags": ["Historical consumption"],
+        "summary": "Aggregate Consumption Day",
+        "description": "Get the average daily consumption aggregated by user.",
+        "operationId": "aggregate_consumption_day_consumption_average_day_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Aggregate Consumption Day Consumption Average Day Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AverageConsumptionItem"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/consumption/average/month": {
+      "get": {
+        "tags": ["Historical consumption"],
+        "summary": "Aggregate Consumption Month",
+        "description": "Get the average daily consumption aggregated by month and user.",
+        "operationId": "aggregate_consumption_month_consumption_average_month_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Aggregate Consumption Month Consumption Average Month Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AverageConsumptionItem"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/consumption/average/year": {
+      "get": {
+        "tags": ["Historical consumption"],
+        "summary": "Aggregate Consumption Year",
+        "description": "Get the average daily consumption aggregated by year and user.",
+        "operationId": "aggregate_consumption_year_consumption_average_year_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Aggregate Consumption Year Consumption Average Year Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AverageConsumptionItem"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/generation/": {
+      "get": {
+        "tags": ["Historical generation"],
+        "summary": "Query Generation",
+        "operationId": "query_generation_generation__get",
+        "parameters": [
+          {
+            "description": "A MongoDB query document serialized in MongoDB Extended JSON format.",
+            "required": true,
+            "schema": {
+              "title": "Query",
+              "type": "string",
+              "description": "A MongoDB query document serialized in MongoDB Extended JSON format."
+            },
+            "example": "{\"datetime\": {\"$gte\": {\"$date\": \"2023-05-22T15:00:00+0200\"}, \"$lte\": {\"$date\": \"2023-05-24T12:30:00+0200\"}}}",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": { "title": "Limit", "type": "integer", "default": 100 },
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "description": "Sort key.",
+            "required": false,
+            "schema": {
+              "title": "Sort",
+              "type": "string",
+              "description": "Sort key."
+            },
+            "example": "+datetime",
+            "name": "sort",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Query Generation Generation  Get",
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/GenerationSample" }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/weather/": {
+      "get": {
+        "tags": ["Historical weather"],
+        "summary": "Query Weather Data",
+        "description": "This endpoint returns weather data from the\n[Spanish AEMET service](https://opendata.aemet.es/)\nfor the area of the Local Energy Community.\nPlease note two key points:\n\n**1.** The AEMET weather station is not located precisely at the site\nof the Local Energy Community.\n\n**2.** We have not been able to consistently retrieve historical weather records from AEMET.\nTherefore, the data available through this API is limited to the daily weather\nreports we have collected starting from the first day this API was deployed.",
+        "operationId": "query_weather_data_weather__get",
+        "parameters": [
+          {
+            "description": "A MongoDB query document serialized in MongoDB Extended JSON format.",
+            "required": true,
+            "schema": {
+              "title": "Query",
+              "type": "string",
+              "description": "A MongoDB query document serialized in MongoDB Extended JSON format."
+            },
+            "example": "{\"datetime_utc\": {\"$gte\": {\"$date\": \"2023-09-13T00:00:00+0200\"}, \"$lte\": {\"$date\": \"2023-09-14T00:00:00+0200\"}}}",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": { "title": "Limit", "type": "integer", "default": 100 },
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "description": "Sort key.",
+            "required": false,
+            "schema": {
+              "title": "Sort",
+              "type": "string",
+              "description": "Sort key."
+            },
+            "example": "+datetime",
+            "name": "sort",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Query Weather Data Weather  Get",
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/WeatherSample" }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/pvgis/hourly-radiation": {
+      "get": {
+        "tags": ["PVGIS"],
+        "summary": "Request Hourly Radiation",
+        "description": "A thin wrapper for the\n[PVGIS Hourly radiation tool API](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/pvgis-tools/hourly-radiation_en).\nIt has been particularized for the LEC location in Spain.\n\nReturns solar irradiance and PV output data for every hour in a multi-year period.",
+        "operationId": "request_hourly_radiation_pvgis_hourly_radiation_get",
+        "parameters": [
+          {
+            "description": "Year of the output of hourly averages.",
+            "required": false,
+            "schema": {
+              "title": "Year",
+              "type": "integer",
+              "description": "Year of the output of hourly averages.",
+              "default": 2020
+            },
+            "name": "year",
+            "in": "query"
+          },
+          {
+            "description": "A JSON object that will be passed as additional query parameters to the PVGIS API request. Please see the [PVGIS API documentation](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/getting-started-pvgis/api-non-interactive-service_en) for further details.",
+            "required": false,
+            "schema": {
+              "title": "Inputs",
+              "type": "string",
+              "description": "A JSON object that will be passed as additional query parameters to the PVGIS API request. Please see the [PVGIS API documentation](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/getting-started-pvgis/api-non-interactive-service_en) for further details."
+            },
+            "name": "inputs",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PVGISHourlyRadiation"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/realtime-semantic/consumption": {
+      "get": {
+        "tags": ["Realtime"],
+        "summary": "Query Realtime Consumption",
+        "description": "Query electrical consumption measurements from smart meters.",
+        "operationId": "query_realtime_consumption_realtime_semantic_consumption_get",
+        "parameters": [
+          {
+            "description": "A MongoDB query document serialized in MongoDB Extended JSON format.",
+            "required": true,
+            "schema": {
+              "title": "Query",
+              "type": "string",
+              "description": "A MongoDB query document serialized in MongoDB Extended JSON format."
+            },
+            "example": "{\"datetime\": {\"$gte\": {\"$date\": \"2024-12-01T15:00:00+0200\"}, \"$lte\": {\"$date\": \"2024-12-31T00:00:00+0200\"}}}",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": { "title": "Limit", "type": "integer", "default": 100 },
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "description": "Sort key.",
+            "required": false,
+            "schema": {
+              "title": "Sort",
+              "type": "string",
+              "description": "Sort key."
+            },
+            "example": "+datetime_utc",
+            "name": "sort",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Query Realtime Consumption Realtime Semantic Consumption Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ElectricalMeasurement"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      },
+      "post": {
+        "tags": ["Realtime"],
+        "summary": "Create Realtime Consumption",
+        "description": "Create new electrical consumption measurements in batch.",
+        "operationId": "create_realtime_consumption_realtime_semantic_consumption_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Measurements",
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ElectricalMeasurement"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Create Realtime Consumption Realtime Semantic Consumption Post",
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/realtime-semantic/consumption/eumed": {
+      "post": {
+        "tags": ["Realtime"],
+        "summary": "Create Realtime Consumption Eumed",
+        "description": "Create new electrical consumption measurements from EUMED-compliant JSON-LD data.",
+        "operationId": "create_realtime_consumption_eumed_realtime_semantic_consumption_eumed_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "title": "Eumed Jsonld Graph", "type": "object" },
+              "example": {
+                "@context": {
+                  "eme": "https://w3id.org/omega-x/ontology/EUMEDMetering#",
+                  "example": "https://w3id.org/data-cellar/example#",
+                  "owl": "http://www.w3.org/2002/07/owl#",
+                  "time": "http://www.w3.org/2006/time#",
+                  "xsd": "http://www.w3.org/2001/XMLSchema#",
+                  "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                },
+                "@graph": [
+                  {
+                    "@id": "example:MeterReadingSet_1",
+                    "@type": ["owl:NamedIndividual", "eme:MeterReadingSet"]
+                  },
+                  {
+                    "@id": "example:ReadingType_1",
+                    "@type": ["owl:NamedIndividual", "eme:ReadingType"],
+                    "eme:hasMeasurementKind": [{ "@id": "eme:power" }],
+                    "eme:hasMultiplier": [{ "@id": "eme:k" }],
+                    "eme:hasNameAsReadingType": [{ "@id": "example:Name_1" }],
+                    "eme:hasUnit": [{ "@id": "eme:W" }],
+                    "eme:isReadingTypeAsPartOfMeterReadingSet": [
+                      { "@id": "example:MeterReadingSet_1" }
+                    ]
+                  },
+                  {
+                    "@id": "example:IntervalBlock_1_1",
+                    "@type": ["owl:NamedIndividual", "eme:IntervalBlock"],
+                    "eme:hasReadingType": [{ "@id": "example:ReadingType_1" }],
+                    "eme:isPartOfMeterReading": [
+                      { "@id": "example:MeterReading_1" }
+                    ]
+                  },
+                  {
+                    "@id": "example:MeterReading_1",
+                    "@type": ["owl:NamedIndividual", "eme:MeterReading"],
+                    "eme:hasValuesInterval": [
+                      { "@id": "example:DateTimeInterval_1" }
+                    ],
+                    "eme:isMeterReadingAsPartOfMeterReadingSet": [
+                      { "@id": "example:MeterReadingSet_1" }
+                    ],
+                    "eme:isRelatedToUsagePoint": [
+                      { "@id": "example:UsagePoint_1" }
+                    ]
+                  },
+                  {
+                    "@id": "example:UsagePoint_1",
+                    "@type": ["owl:NamedIndividual", "eme:UsagePoint"],
+                    "eme:hasNameAsUsagePoint": [
+                      { "@id": "example:NameDevice_1" }
+                    ],
+                    "eme:isUsagePointAsPartOfMeterReadingSet": [
+                      { "@id": "example:MeterReadingSet_1" }
+                    ]
+                  },
+                  {
+                    "@id": "example:IntervalReading_28085",
+                    "@type": ["owl:NamedIndividual", "eme:IntervalReading"],
+                    "eme:isPartOfIntervalBlock": [
+                      { "@id": "example:IntervalBlock_1_1" }
+                    ],
+                    "eme:timeStamp": [
+                      {
+                        "@type": "xsd:dateTime",
+                        "@value": "2024-11-12T20:30:00"
+                      }
+                    ],
+                    "eme:value": [{ "@type": "xsd:float", "@value": "124.0" }]
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Create Realtime Consumption Eumed Realtime Semantic Consumption Eumed Post",
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/realtime/": {
+      "get": {
+        "tags": ["Realtime data from Gecko platform"],
+        "summary": "Query Gecko Timeseries",
+        "description": "Query time series data provided in real-time by the Local Energy Community through the Gecko platform.",
+        "operationId": "query_gecko_timeseries_realtime__get",
+        "parameters": [
+          {
+            "description": "A MongoDB query document serialized in MongoDB Extended JSON format.",
+            "required": true,
+            "schema": {
+              "title": "Query",
+              "type": "string",
+              "description": "A MongoDB query document serialized in MongoDB Extended JSON format."
+            },
+            "example": "{\"_time\": {\"$gte\": {\"$date\": \"2025-05-20T00:00:00Z\"}, \"$lte\": {\"$date\": \"2025-05-21T00:00:00Z\"}}, \"_field\": {\"$in\": [\"powerReact\", \"powerTot\"]}}",
+            "name": "query",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": { "title": "Limit", "type": "integer", "default": 100 },
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "description": "Sort key.",
+            "required": false,
+            "schema": {
+              "title": "Sort",
+              "type": "string",
+              "description": "Sort key."
+            },
+            "example": "+_time",
+            "name": "sort",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Query Gecko Timeseries Realtime  Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GeckoTimeseriesDataPoint"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }, { "APIKeyHeader": [] }]
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Get Info",
+        "description": "Get information about the server\nas obtained by calling platform.uname.",
+        "operationId": "get_info__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Info  Get",
+                  "type": "array",
+                  "items": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AverageConsumptionItem": {
+        "title": "AverageConsumptionItem",
+        "required": ["avg_energy_consumption_kwh", "user_id", "date_utc"],
+        "type": "object",
+        "properties": {
+          "avg_energy_consumption_kwh": {
+            "title": "Avg Energy Consumption Kwh",
+            "type": "number"
+          },
+          "user_id": { "title": "User Id", "type": "string" },
+          "date_utc": {
+            "title": "Date Utc",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Body_login_for_access_token_token_post": {
+        "title": "Body_login_for_access_token_token_post",
+        "required": ["username", "password"],
+        "type": "object",
+        "properties": {
+          "grant_type": {
+            "title": "Grant Type",
+            "pattern": "password",
+            "type": "string"
+          },
+          "username": { "title": "Username", "type": "string" },
+          "password": { "title": "Password", "type": "string" },
+          "scope": { "title": "Scope", "type": "string", "default": "" },
+          "client_id": { "title": "Client Id", "type": "string" },
+          "client_secret": { "title": "Client Secret", "type": "string" }
+        }
+      },
+      "ConsumptionData": {
+        "title": "ConsumptionData",
+        "required": ["energy_consumption_kwh"],
+        "type": "object",
+        "properties": {
+          "energy_consumption_kwh": {
+            "title": "Energy consumption",
+            "type": "number",
+            "description": "The hourly energy consumption in Kilowatt hours."
+          }
+        }
+      },
+      "ConsumptionSample": {
+        "title": "ConsumptionSample",
+        "required": ["user_id", "local_date_str", "datetime", "data"],
+        "type": "object",
+        "properties": {
+          "_id": {
+            "title": " Id",
+            "type": "string",
+            "description": "The unique identifier of the document."
+          },
+          "user_id": {
+            "title": "User or asset ID",
+            "type": "string",
+            "description": "The unique and anonymous identifier of the user or asset."
+          },
+          "local_date_str": {
+            "title": "Local date string",
+            "type": "string",
+            "description": "The local date as a string for aggregation purposes."
+          },
+          "datetime": {
+            "title": "Timestamp",
+            "type": "string",
+            "description": "The date and time in UTC.",
+            "format": "date-time"
+          },
+          "data": { "$ref": "#/components/schemas/ConsumptionData" }
+        }
+      },
+      "ElectricalMeasurement": {
+        "title": "ElectricalMeasurement",
+        "required": ["meter_id", "datetime", "data", "measurement_type"],
+        "type": "object",
+        "properties": {
+          "_id": {
+            "title": " Id",
+            "type": "string",
+            "description": "The unique identifier of the document."
+          },
+          "meter_id": {
+            "title": "Meter ID",
+            "type": "string",
+            "description": "The unique identifier of the meter."
+          },
+          "datetime": {
+            "title": "Timestamp",
+            "type": "string",
+            "description": "The date and time in UTC.",
+            "format": "date-time"
+          },
+          "data": {
+            "title": "Measurement Data",
+            "allOf": [
+              { "$ref": "#/components/schemas/ElectricalMeasurementData" }
+            ],
+            "description": "Dictionary containing the electrical measurements."
+          },
+          "measurement_type": {
+            "title": "Measurement Type",
+            "allOf": [{ "$ref": "#/components/schemas/MeasurementTypeEnum" }],
+            "description": "Type of electrical measurement ('power' or 'energy')."
+          },
+          "reading_type": {
+            "title": "Reading Type",
+            "allOf": [{ "$ref": "#/components/schemas/ReadingTypeEnum" }],
+            "description": "For energy: 'increment' or 'absolute'."
+          },
+          "period_seconds": {
+            "title": "Period",
+            "type": "integer",
+            "description": "The period in seconds over which the energy measurement was taken."
+          }
+        }
+      },
+      "ElectricalMeasurementData": {
+        "title": "ElectricalMeasurementData",
+        "type": "object",
+        "properties": {
+          "active_power_w": {
+            "title": "Active power",
+            "type": "number",
+            "description": "The active power in Watts."
+          },
+          "reactive_power_var": {
+            "title": "Reactive power",
+            "type": "number",
+            "description": "The reactive power in Volt-Amperes reactive."
+          },
+          "apparent_power_va": {
+            "title": "Apparent power",
+            "type": "number",
+            "description": "The apparent power in Volt-Amperes."
+          },
+          "energy_wh": {
+            "title": "Energy",
+            "type": "number",
+            "description": "The energy in Watt-hours."
+          }
+        }
+      },
+      "GeckoTimeseriesDataPoint": {
+        "title": "GeckoTimeseriesDataPoint",
+        "required": [
+          "_field",
+          "_measurement",
+          "_time",
+          "_value",
+          "result",
+          "slaveGroup",
+          "slaveId",
+          "table",
+          "varGroup"
+        ],
+        "type": "object",
+        "properties": {
+          "_id": {
+            "title": " Id",
+            "type": "string",
+            "description": "The unique identifier of the document."
+          },
+          "_field": { "title": " Field", "type": "string" },
+          "_measurement": { "title": " Measurement", "type": "string" },
+          "_time": {
+            "title": " Time",
+            "type": "string",
+            "format": "date-time"
+          },
+          "_value": {
+            "title": " Value",
+            "anyOf": [
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "string" },
+              { "type": "boolean" }
+            ]
+          },
+          "result": { "title": "Result", "type": "string" },
+          "slaveGroup": { "title": "Slavegroup", "type": "string" },
+          "slaveId": { "title": "Slaveid", "type": "string" },
+          "table": { "title": "Table", "type": "integer" },
+          "varGroup": { "title": "Vargroup", "type": "string" }
+        },
+        "description": "A data point from the Gecko timeseries collection\ncontaining real-time data for the Local Energy Community."
+      },
+      "GenerationData": {
+        "title": "GenerationData",
+        "required": ["type", "generation_kwh", "nominal_power_w"],
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "Type",
+            "type": "string",
+            "description": "The type of energy generation asset."
+          },
+          "generation_kwh": {
+            "title": "Energy generation",
+            "type": "number",
+            "description": "The hourly energy generation in Kilowatt hours."
+          },
+          "nominal_power_w": {
+            "title": "Nominal power",
+            "type": "number",
+            "description": "The nominal installed power in Watts."
+          }
+        }
+      },
+      "GenerationSample": {
+        "title": "GenerationSample",
+        "required": ["user_id", "local_date_str", "datetime", "data"],
+        "type": "object",
+        "properties": {
+          "_id": {
+            "title": " Id",
+            "type": "string",
+            "description": "The unique identifier of the document."
+          },
+          "user_id": {
+            "title": "User or asset ID",
+            "type": "string",
+            "description": "The unique and anonymous identifier of the user or asset."
+          },
+          "local_date_str": {
+            "title": "Local date string",
+            "type": "string",
+            "description": "The local date as a string for aggregation purposes."
+          },
+          "datetime": {
+            "title": "Timestamp",
+            "type": "string",
+            "description": "The date and time in UTC.",
+            "format": "date-time"
+          },
+          "data": { "$ref": "#/components/schemas/GenerationData" }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ValidationError" }
+          }
+        }
+      },
+      "MeasurementTypeEnum": {
+        "title": "MeasurementTypeEnum",
+        "enum": ["power", "energy"],
+        "type": "string",
+        "description": "An enumeration."
+      },
+      "PVGISHourlyRadiation": {
+        "title": "PVGISHourlyRadiation",
+        "required": ["inputs", "outputs", "meta"],
+        "type": "object",
+        "properties": {
+          "inputs": {
+            "$ref": "#/components/schemas/PVGISHourlyRadiationInputs"
+          },
+          "outputs": {
+            "$ref": "#/components/schemas/PVGISHourlyRadiationOutputs"
+          },
+          "meta": { "$ref": "#/components/schemas/PVGISHourlyRadiationMeta" }
+        },
+        "description": "Please check the\n[PVGIS API documentation](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/pvgis-tools/hourly-radiation_en)\nfor further details."
+      },
+      "PVGISHourlyRadiationInputs": {
+        "title": "PVGISHourlyRadiationInputs",
+        "required": ["location", "meteo_data", "mounting_system", "pv_module"],
+        "type": "object",
+        "properties": {
+          "location": { "title": "Location", "type": "object" },
+          "meteo_data": { "title": "Meteo Data", "type": "object" },
+          "mounting_system": { "title": "Mounting System", "type": "object" },
+          "pv_module": { "title": "Pv Module", "type": "object" }
+        }
+      },
+      "PVGISHourlyRadiationMeta": {
+        "title": "PVGISHourlyRadiationMeta",
+        "required": ["inputs", "outputs"],
+        "type": "object",
+        "properties": {
+          "inputs": { "title": "Inputs", "type": "object" },
+          "outputs": { "title": "Outputs", "type": "object" }
+        }
+      },
+      "PVGISHourlyRadiationOutputs": {
+        "title": "PVGISHourlyRadiationOutputs",
+        "required": ["hourly"],
+        "type": "object",
+        "properties": {
+          "hourly": {
+            "title": "Hourly",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "anyOf": [
+                  { "type": "string" },
+                  { "type": "number" },
+                  { "type": "integer" }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "QueryConsumptionRequestBody": {
+        "title": "QueryConsumptionRequestBody",
+        "required": ["query"],
+        "type": "object",
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "object",
+            "description": "A MongoDB query document in JSON format following the MongoDB Extended JSON specification.",
+            "example": {
+              "datetime": {
+                "$gte": { "$date": "2022-07-13T16:00:00+0200" },
+                "$lte": { "$date": "2022-07-15T16:00:00+0200" }
+              }
+            }
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer",
+            "description": "Maximum number of results to return",
+            "default": 100
+          },
+          "sort": {
+            "title": "Sort",
+            "type": "string",
+            "description": "Sort key",
+            "example": "+datetime"
+          },
+          "eumed": {
+            "title": "Eumed",
+            "type": "boolean",
+            "description": "Whether to return consumption data modeled as a dataset compliant with the EUMED metering data model in JSON-LD format",
+            "default": false
+          }
+        }
+      },
+      "ReadingTypeEnum": {
+        "title": "ReadingTypeEnum",
+        "enum": ["increment", "absolute"],
+        "type": "string",
+        "description": "An enumeration."
+      },
+      "Token": {
+        "title": "Token",
+        "required": ["access_token", "token_type"],
+        "type": "object",
+        "properties": {
+          "access_token": { "title": "Access Token", "type": "string" },
+          "token_type": { "title": "Token Type", "type": "string" }
+        }
+      },
+      "User": {
+        "title": "User",
+        "required": ["username"],
+        "type": "object",
+        "properties": {
+          "username": { "title": "Username", "type": "string" },
+          "email": { "title": "Email", "type": "string" },
+          "full_name": { "title": "Full Name", "type": "string" },
+          "disabled": { "title": "Disabled", "type": "boolean" }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": ["loc", "msg", "type"],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] }
+          },
+          "msg": { "title": "Message", "type": "string" },
+          "type": { "title": "Error Type", "type": "string" }
+        }
+      },
+      "WeatherSample": {
+        "title": "WeatherSample",
+        "required": ["datetime_utc", "idema", "fint", "ubi"],
+        "type": "object",
+        "properties": {
+          "_id": {
+            "title": " Id",
+            "type": "string",
+            "description": "The unique identifier of the document."
+          },
+          "datetime_utc": {
+            "title": "Timestamp",
+            "type": "string",
+            "description": "The date and time of the sample in UTC.",
+            "format": "date-time"
+          },
+          "idema": {
+            "title": "Idema",
+            "type": "string",
+            "description": "Identification code of the meteorological station where the data was collected."
+          },
+          "fint": {
+            "title": "Fint",
+            "type": "string",
+            "description": "String representation of the date and time of the data point."
+          },
+          "ubi": {
+            "title": "Ubi",
+            "type": "string",
+            "description": "Name or location of the station."
+          },
+          "alt": {
+            "title": "Alt",
+            "type": "integer",
+            "description": "Elevation of the station's location (m)."
+          },
+          "dmax": {
+            "title": "Dmax",
+            "type": "integer",
+            "description": "Maximum wind direction in the last 60 minutes."
+          },
+          "dv": {
+            "title": "Dv",
+            "type": "integer",
+            "description": "Average wind direction in the last 10 minutes."
+          },
+          "hr": {
+            "title": "Hr",
+            "type": "integer",
+            "description": "Relative humidity, representing the percentage of moisture in the air."
+          },
+          "inso": {
+            "title": "Inso",
+            "type": "integer",
+            "description": "Duration of the insolation in the last 60 minutes."
+          },
+          "lat": {
+            "title": "Lat",
+            "type": "number",
+            "description": "Latitude coordinate of the station's location (degrees)."
+          },
+          "lon": {
+            "title": "Lon",
+            "type": "number",
+            "description": "Longitude coordinate of the station's location (degrees)."
+          },
+          "prec": {
+            "title": "Prec",
+            "type": "integer",
+            "description": "Precipitation, that is, the amount of rainfall measured at the station (l/m2)."
+          },
+          "pres": {
+            "title": "Pres",
+            "type": "number",
+            "description": "Atmospheric pressure at the station (hPa)."
+          },
+          "pres_nmar": {
+            "title": "Pres Nmar",
+            "type": "number",
+            "description": "Atmospheric pressure reduced to mean sea level (hPa)."
+          },
+          "stddv": {
+            "title": "Stddv",
+            "type": "integer",
+            "description": "Standard deviation of wind direction."
+          },
+          "stdvv": {
+            "title": "Stdvv",
+            "type": "number",
+            "description": "Standard deviation of wind speed (m/s)."
+          },
+          "ta": {
+            "title": "Ta",
+            "type": "number",
+            "description": "Current air temperature at the station (°C)."
+          },
+          "tamax": {
+            "title": "Tamax",
+            "type": "number",
+            "description": "Maximum air temperature recorded at the station (°C)."
+          },
+          "tamin": {
+            "title": "Tamin",
+            "type": "number",
+            "description": "Minimum air temperature recorded at the station (°C)."
+          },
+          "tpr": {
+            "title": "Tpr",
+            "type": "number",
+            "description": "Temperature of the dew point in degrees Celsius (°C)."
+          },
+          "ts": {
+            "title": "Ts",
+            "type": "number",
+            "description": "Dry-bulb temperature in degrees Celsius (°C)."
+          },
+          "vmax": {
+            "title": "Vmax",
+            "type": "number",
+            "description": "Maximum wind speed recorded at the station (m/s)."
+          },
+          "vv": {
+            "title": "Vv",
+            "type": "number",
+            "description": "Current wind speed at the station (m/s)."
+          },
+          "vis": {
+            "title": "Vis",
+            "type": "number",
+            "description": "Visibility, which is the distance at which objects can be clearly seen."
+          },
+          "tss5cm": {
+            "title": "Tss5Cm",
+            "type": "number",
+            "description": "Temperature of the soil at a depth of 5 centimeters (°C)."
+          },
+          "pacutp": {
+            "title": "Pacutp",
+            "type": "number",
+            "description": "Accumulated precipitation, indicating the total amount of rainfall over a specific period (l/m2)."
+          },
+          "tss20cm": {
+            "title": "Tss20Cm",
+            "type": "number",
+            "description": "Temperature of the soil at a depth of 20 centimeters (°C)."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": { "password": { "scopes": {}, "tokenUrl": "token" } }
+      },
+      "APIKeyHeader": { "type": "apiKey", "in": "header", "name": "X-API-Key" }
+    }
+  },
+  "tags": [
+    {
+      "name": "Historical consumption",
+      "description": "Access historical energy consumption data provided by the DSO."
+    },
+    {
+      "name": "Historical generation",
+      "description": "Access historical energy generation data provided by the DSO."
+    },
+    {
+      "name": "Historical weather",
+      "description": "Access weather data from the Spanish State Meteorological Agency (AEMET)."
+    },
+    {
+      "name": "PVGIS",
+      "description": "Interface with the Photovoltaic Geographical Information System (PVGIS) services."
+    },
+    {
+      "name": "Realtime",
+      "description": "Proof of concept for smart meter data points based on Energy Data Spaces Cluster Projects' semantic interoperability design."
+    },
+    {
+      "name": "Realtime data from Gecko platform",
+      "description": "Access real-time data from the Local Energy Community provided by the GECKO platform. There's a significant difference with the realtime routes—the realtime routes were created as a proof of concept for semantic interoperability and don't hold real data; the GECKO routes, in contrast, do provide real data captured from the infrastructure of the Local Energy Community."
+    }
+  ]
+}

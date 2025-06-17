@@ -1,0 +1,26 @@
+# Virtual environment
+venv/
+.venv/
+
+# Environment configuration
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated datasets (optional - comment out if you want to track them)
+# datasets/*.json
