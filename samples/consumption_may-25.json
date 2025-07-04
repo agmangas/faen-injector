@@ -1,0 +1,902 @@
+[
+  {
+    "_id": "6814f0c1a310511f429adc3f",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T22:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.16
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc40",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T22:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.1
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc41",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T22:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.43
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc42",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T22:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.18
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc43",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T22:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.16
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc44",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T22:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.21
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc45",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T22:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.2
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc38",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T23:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.13
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc39",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T23:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.07
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc3a",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T23:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.4
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc3b",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T23:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.18
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc3c",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T23:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.85
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc3d",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T23:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.24
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc3e",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T23:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.13
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc31",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T00:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.13
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc32",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T00:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.05
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc33",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T00:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.39
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc34",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T00:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc35",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T00:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.75
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc36",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T00:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.17
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc37",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T00:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.1
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc2a",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T01:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.11
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc2b",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T01:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.08
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc2c",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T01:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.45
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc2d",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T01:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc2e",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T01:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.41
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc2f",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T01:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.19
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc30",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T01:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.09
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc23",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T02:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.12
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc24",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T02:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.06
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc25",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T02:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.41
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc26",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T02:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc27",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T02:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.21
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc28",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T02:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.19
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc29",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T02:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.1
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc1c",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T03:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.37
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc1d",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T03:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.08
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc1e",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T03:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.39
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc1f",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T03:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc20",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T03:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.16
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc21",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T03:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.2
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc22",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T03:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.11
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc15",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T04:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.48
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc16",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T04:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.08
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc17",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T04:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.38
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc18",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T04:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc19",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T04:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc1a",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T04:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.17
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc1b",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T04:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.11
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc0e",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T05:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.13
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc0f",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T05:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.04
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc10",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T05:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.32
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc11",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T05:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.2
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc12",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T05:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc13",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T05:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.2
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc14",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T05:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.12
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc07",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T06:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.12
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc08",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T06:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.09
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc09",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T06:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.37
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc0a",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T06:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.24
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc0b",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T06:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.17
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc0c",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T06:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.23
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc0d",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T06:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.22
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc00",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T07:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.3
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc01",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T07:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.08
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc02",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T07:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.31
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc03",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T07:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.16
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc04",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T07:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc05",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T07:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.2
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adc06",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T07:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.19
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf9",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T08:00:00",
+    "data": {
+      "energy_consumption_kwh": 1.05
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbfa",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T08:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.05
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbfb",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T08:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.47
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbfc",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T08:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbfd",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T08:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.56
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbfe",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T08:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.39
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbff",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T08:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.28
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf2",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T09:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.11
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf3",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T09:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.07
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf4",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T09:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.32
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf5",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T09:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.15
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf6",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T09:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.73
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf7",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T09:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.79
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf8",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T09:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.12
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbeb",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T10:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.12
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbec",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T10:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.09
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbed",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T10:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.37
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbee",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T10:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.7
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbef",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T10:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.65
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf0",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T10:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.47
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbf1",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T10:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.13
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbe4",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T11:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.1
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbe5",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T11:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.07
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbe6",
+    "user_id": "user-8647f405-0e74-4dfd-8e54-9be990fb982e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T11:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.61
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbe7",
+    "user_id": "user-eaf05183-e8dd-4661-9d2d-4f778f9070c2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T11:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.99
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbe8",
+    "user_id": "user-4b836cfb-3ff5-4917-aa81-e78b078ce661",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T11:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.28
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbe9",
+    "user_id": "user-ee5ab54c-420b-4814-a301-090bd6617318",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T11:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.44
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbea",
+    "user_id": "user-8447aac9-8102-41bb-b354-7bf7717cf8e2",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T11:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.14
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbdd",
+    "user_id": "user-438a87c4-ac07-4d97-9d82-b4b3ef3973f7",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T12:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.33
+    }
+  },
+  {
+    "_id": "6814f0c1a310511f429adbde",
+    "user_id": "user-44ece172-28d8-42f0-89ed-de9be7838ed4",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T12:00:00",
+    "data": {
+      "energy_consumption_kwh": 0.08
+    }
+  }
+]

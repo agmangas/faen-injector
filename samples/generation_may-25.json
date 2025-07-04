@@ -1,0 +1,1102 @@
+[
+  {
+    "_id": "6814f0c2a310511f429adc5d",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T22:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc5c",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-04-30T23:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc5b",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T00:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc5a",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T01:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc59",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T02:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc58",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T03:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc57",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T04:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc56",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T05:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc55",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T06:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.1,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc54",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T07:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.6,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc53",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T08:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 2.19,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc52",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T09:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 7,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc51",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T10:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 11.76,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc50",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T11:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 12.96,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc4f",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T12:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 9.17,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc4e",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T13:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 13.48,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc4d",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T14:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 18.22,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc4c",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T15:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 16.53,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc4b",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T16:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 14.78,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc4a",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T17:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 11.47,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc49",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T18:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 6.11,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc48",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T19:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 2.17,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc47",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T20:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.03,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "6814f0c2a310511f429adc46",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-01",
+    "datetime": "2025-05-01T21:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add4d",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-01T22:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add4c",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-01T23:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add4b",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T00:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add4a",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T01:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add49",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T02:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add48",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T03:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add47",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T04:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add46",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T05:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add45",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T06:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.07,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add44",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T07:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.4,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add43",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T08:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.54,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add42",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T09:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 1.6,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add41",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T10:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 3,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add40",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T11:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 6.83,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add3f",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T12:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 9.23,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add3e",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T13:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 5.84,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add3d",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T14:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 10.44,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add3c",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T15:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 12.44,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add3b",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T16:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 15.82,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add3a",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T17:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 3.71,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add39",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T18:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.81,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add38",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T19:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.36,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add37",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T20:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.03,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "68164259a310511f429add36",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-02",
+    "datetime": "2025-05-02T21:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf78c",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-02T22:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf78b",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-02T23:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf78a",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T00:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf789",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T01:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf788",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T02:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf787",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T03:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf786",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T04:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf785",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T05:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf784",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T06:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.15,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf783",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T07:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.69,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf782",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T08:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 2.75,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf781",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T09:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 5.95,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf780",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T10:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 8.2,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf77f",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T11:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 6.13,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf77e",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T12:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 3.35,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf77d",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T13:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 7.93,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf77c",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T14:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 6.66,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf77b",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T15:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 3.13,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf77a",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T16:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 10.68,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf779",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T17:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 6.15,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf778",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T18:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 5.8,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf777",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T19:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.56,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf776",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T20:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.05,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf775",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-03",
+    "datetime": "2025-05-03T21:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf7a4",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-03T22:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf7a3",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-03T23:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf7a2",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T00:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf7a1",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T01:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf7a0",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T02:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf79f",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T03:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf79e",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T04:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf79d",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T05:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf79c",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T06:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.1,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf79b",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T07:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.97,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf79a",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T08:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 2.27,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf799",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T09:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 2.44,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf798",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T10:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 4.07,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf797",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T11:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 3.9,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf796",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T12:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 2.74,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf795",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T13:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 1.46,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf794",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T14:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.52,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf793",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T15:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 1.83,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf792",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T16:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 7.33,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf791",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T17:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 5.51,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf790",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T18:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.72,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf78f",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T19:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0.34,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf78e",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T20:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf78d",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-04",
+    "datetime": "2025-05-04T21:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf7bc",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-05",
+    "datetime": "2025-05-04T22:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf7bb",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-05",
+    "datetime": "2025-05-04T23:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf7ba",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-05",
+    "datetime": "2025-05-05T00:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  },
+  {
+    "_id": "682b5b6704a77dd7218bf7b9",
+    "user_id": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e",
+    "local_date_str": "2025-05-05",
+    "datetime": "2025-05-05T01:00:00",
+    "data": {
+      "type": "b11",
+      "generation_kwh": 0,
+      "nominal_power_w": 20000
+    }
+  }
+]
