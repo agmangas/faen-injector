@@ -52,24 +52,27 @@ curl -X 'GET' \
 - [x] Created test script to verify API functionality
 
 ### 3. Enhance data_utils.py
-- [ ] Modify `generate_dataset_definition()` to support multiple timeseries types
-- [ ] Remove hardcoded consumption-specific logic
-- [ ] Support parametric dataset field definitions
-- [ ] Update dataset naming and descriptions
+- [x] Modify `generate_dataset_definition()` to support multiple timeseries types
+- [x] Remove hardcoded consumption-specific logic
+- [x] Support parametric dataset field definitions
+- [x] Update dataset naming and descriptions
+- [x] Created `generate_combined_dataset_definition()` function
 
 ### 4. Create Combined Transformation Function
-- [ ] New function to transform generation data to CDE datapoints
-- [ ] New function to transform weather data to CDE datapoints  
-- [ ] Handle timestamp alignment between different data sources
-- [ ] Support multiple measurement types in single dataset
+- [x] New function to transform generation data to CDE datapoints
+- [x] New function to transform weather data to CDE datapoints  
+- [x] Handle timestamp alignment between different data sources
+- [x] Support multiple measurement types in single dataset
+- [x] Created `transform_generation_to_datapoints()` and `transform_weather_to_datapoints()`
 
 ### 5. Update Dataset Definition Generator
-- [ ] Create datasets with 3 timeseries:
+- [x] Create datasets with 3 timeseries:
   - Generation: `datacellar:fieldType` with unit "kWh"
   - Temperature: `datacellar:fieldType` with unit "°C" 
   - Humidity: `datacellar:fieldType` with unit "%"
-- [ ] Update timeseries metadata types appropriately
-- [ ] Modify dataset title generation for combined datasets
+- [x] Update timeseries metadata types appropriately
+- [x] Modify dataset title generation for combined datasets
+- [x] Populate `datacellar:dataPoints` arrays with actual data
 
 ### 6. Integrate CLI Interface
 - [ ] Add new dataset type option in CLI
@@ -104,7 +107,8 @@ curl -X 'GET' \
 ## Files Modified/Created
 - ✅ `faen_client.py` - Added `query_generation()` and `query_weather()` methods
 - ✅ `test_api_calls.py` - Test script for new API functionality
-- 🔄 `data_utils.py` - Core dataset generation logic (next)
+- ✅ `data_utils.py` - Enhanced with combined dataset generation logic
+- ✅ `test_combined_dataset.py` - Test script for combined dataset creation
 - 🔄 Main script (TBD) - API calls and CLI integration
 - 🔄 Potentially create new utility modules for API abstraction
 

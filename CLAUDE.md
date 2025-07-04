@@ -11,9 +11,16 @@ This is the FAEN API client directory within the CDE (Data Cellar) server projec
 ### Main Components
 
 - **FAEN API Client (`FaenApiClient`)**: Handles OAuth2 authentication and data retrieval from the FAEN API
+  - Supports consumption, generation, and weather data endpoints
+  - OAuth2 password flow authentication
+  - MongoDB-style query support
 - **CDE API Client (`CDEApiClient`)**: Manages dataset uploads and datapoint submissions to the CDE internal API
-- **Dataset Generation**: Transforms FAEN consumption data into CDE-compatible JSON-LD dataset definitions
+- **Dataset Generation**: Transforms FAEN data into CDE-compatible JSON-LD dataset definitions
+  - Support for consumption-only datasets (legacy)
+  - Support for combined generation + weather datasets (new)
 - **Data Transformation**: Converts FAEN records to CDE datapoint format for timeseries storage
+  - Generation data: `generation_kwh` → `generatedEnergy` timeseries
+  - Weather data: `ta` → `temperature`, `hr` → `humidityLevel` timeseries
 
 ### API Integration Flow
 
@@ -70,13 +77,17 @@ python test_dotenv_behavior.py
 
 ### FAEN Data Structure
 - **Consumption Records**: User ID, datetime, energy consumption (kWh)
+- **Generation Records**: User ID, datetime, energy generation (kWh), type, nominal power
+- **Weather Records**: Station-based, datetime_utc, temperature (ta), humidity (hr), and other meteorological parameters
 - **MongoDB Queries**: Date range filtering using MongoDB Extended JSON format
 - **Authentication**: Bearer token required for all data endpoints
 
 ### CDE Integration
 - **Dataset Definitions**: JSON-LD format with datacellar namespace
-- **Timeseries**: Individual timeseries per user with metadata
-- **Datapoints**: Individual measurements linked to timeseries by ID
+  - Consumption datasets: Single measurement type (`consumedEnergy`)
+  - Combined datasets: Multiple measurement types (`generatedEnergy`, `temperature`, `humidityLevel`)
+- **Timeseries**: Individual timeseries per user/measurement with metadata
+- **Datapoints**: Individual measurements with timestamps and values embedded in timeseries
 - **Health Checks**: CDE API health endpoint for connectivity verification
 
 ## Development Notes

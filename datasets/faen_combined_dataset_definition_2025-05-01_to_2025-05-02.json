@@ -1,0 +1,662 @@
+{
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "graph": "@graph",
+    "datacellar": "http://datacellar.org/schema#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "datacellar:capacity": {
+      "@type": "xsd:float"
+    },
+    "datacellar:elevation": {
+      "@type": "xsd:float"
+    },
+    "datacellar:floorArea": {
+      "@type": "xsd:float"
+    },
+    "datacellar:insulationSurface": {
+      "@type": "xsd:float"
+    },
+    "datacellar:latitude": {
+      "@type": "xsd:float"
+    },
+    "datacellar:longitude": {
+      "@type": "xsd:float"
+    },
+    "datacellar:openingsArea": {
+      "@type": "xsd:float"
+    },
+    "datacellar:orientation": {
+      "@type": "xsd:float"
+    },
+    "datacellar:startDate": {
+      "@type": "xsd:dateTime"
+    },
+    "datacellar:endDate": {
+      "@type": "xsd:dateTime"
+    },
+    "datacellar:tilt": {
+      "@type": "xsd:float"
+    },
+    "datacellar:timestamp": {
+      "@type": "xsd:dateTime"
+    },
+    "datacellar:totalAnnualEnergyConsumption": {
+      "@type": "xsd:float"
+    },
+    "datacellar:value": {
+      "@type": "xsd:float"
+    }
+  },
+  "@type": "datacellar:Dataset",
+  "datacellar:name": "FAEN Generation & Weather May 2025",
+  "datacellar:description": "Combined dataset with generation, temperature, and humidity data from 2025-05-01 to 2025-05-02",
+  "datacellar:datasetDescription": {
+    "@type": "datacellar:DatasetDescription",
+    "datacellar:datasetDescriptionID": 1,
+    "datacellar:datasetMetadataTypes": [
+      "datacellar:GeoLocalizedDataset",
+      "datacellar:Installation"
+    ],
+    "datacellar:datasetFields": [
+      {
+        "@type": "datacellar:DatasetField",
+        "datacellar:datasetFieldID": 1,
+        "datacellar:name": "generatedEnergy",
+        "datacellar:description": "The generated energy of a PV in kWh",
+        "datacellar:timeseriesMetadataType": "datacellar:PVPanel",
+        "datacellar:fieldType": {
+          "@type": "datacellar:FieldType",
+          "datacellar:unit": "kWh",
+          "datacellar:averagable": false,
+          "datacellar:summable": true,
+          "datacellar:anonymizable": false
+        }
+      },
+      {
+        "@type": "datacellar:DatasetField",
+        "datacellar:datasetFieldID": 2,
+        "datacellar:name": "temperature",
+        "datacellar:description": "Ambient temperature in Celsius",
+        "datacellar:timeseriesMetadataType": "datacellar:PVPanel",
+        "datacellar:fieldType": {
+          "@type": "datacellar:FieldType",
+          "datacellar:unit": "C",
+          "datacellar:averagable": true,
+          "datacellar:summable": false,
+          "datacellar:anonymizable": false
+        }
+      },
+      {
+        "@type": "datacellar:DatasetField",
+        "datacellar:datasetFieldID": 3,
+        "datacellar:name": "humidityLevel",
+        "datacellar:description": "Humidity level in percentage",
+        "datacellar:timeseriesMetadataType": "datacellar:PVPanel",
+        "datacellar:fieldType": {
+          "@type": "datacellar:FieldType",
+          "datacellar:unit": "Percent",
+          "datacellar:averagable": true,
+          "datacellar:summable": false,
+          "datacellar:anonymizable": false
+        }
+      }
+    ]
+  },
+  "datacellar:timeSeries": [
+    {
+      "@type": "datacellar:TimeSeries",
+      "datacellar:datasetFieldID": 1,
+      "datacellar:startDate": "2025-05-01T00:00:00Z",
+      "datacellar:endDate": "2025-05-02T23:59:59Z",
+      "datacellar:timeZone": "0",
+      "datacellar:granularity": "Hourly",
+      "datacellar:dataPoints": [
+        {
+          "datacellar:timestamp": "2025-05-01T00:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T01:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T02:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T03:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T04:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T05:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T06:00:00Z",
+          "datacellar:value": 0.1
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T07:00:00Z",
+          "datacellar:value": 0.6
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T08:00:00Z",
+          "datacellar:value": 2.19
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T09:00:00Z",
+          "datacellar:value": 7.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T10:00:00Z",
+          "datacellar:value": 11.76
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T11:00:00Z",
+          "datacellar:value": 12.96
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T12:00:00Z",
+          "datacellar:value": 9.17
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T13:00:00Z",
+          "datacellar:value": 13.48
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T14:00:00Z",
+          "datacellar:value": 18.22
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T15:00:00Z",
+          "datacellar:value": 16.53
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T16:00:00Z",
+          "datacellar:value": 14.78
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T17:00:00Z",
+          "datacellar:value": 11.47
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T18:00:00Z",
+          "datacellar:value": 6.11
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T19:00:00Z",
+          "datacellar:value": 2.17
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T20:00:00Z",
+          "datacellar:value": 0.03
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T21:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T22:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T23:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T00:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T01:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T02:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T03:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T04:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T05:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T06:00:00Z",
+          "datacellar:value": 0.07
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T07:00:00Z",
+          "datacellar:value": 0.4
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T08:00:00Z",
+          "datacellar:value": 0.54
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T09:00:00Z",
+          "datacellar:value": 1.6
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T10:00:00Z",
+          "datacellar:value": 3.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T11:00:00Z",
+          "datacellar:value": 6.83
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T12:00:00Z",
+          "datacellar:value": 9.23
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T13:00:00Z",
+          "datacellar:value": 5.84
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T14:00:00Z",
+          "datacellar:value": 10.44
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T15:00:00Z",
+          "datacellar:value": 12.44
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T16:00:00Z",
+          "datacellar:value": 15.82
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T17:00:00Z",
+          "datacellar:value": 3.71
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T18:00:00Z",
+          "datacellar:value": 0.81
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T19:00:00Z",
+          "datacellar:value": 0.36
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T20:00:00Z",
+          "datacellar:value": 0.03
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T21:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T22:00:00Z",
+          "datacellar:value": 0.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T23:00:00Z",
+          "datacellar:value": 0.0
+        }
+      ],
+      "datacellar:timeSeriesMetadata": {
+        "@type": "datacellar:PVPanel",
+        "datacellar:deviceID": "user-f6726b8b-28c1-4aec-a5b4-8ae41b47180e"
+      }
+    },
+    {
+      "@type": "datacellar:TimeSeries",
+      "datacellar:datasetFieldID": 2,
+      "datacellar:startDate": "2025-05-01T00:00:00Z",
+      "datacellar:endDate": "2025-05-02T23:59:59Z",
+      "datacellar:timeZone": "0",
+      "datacellar:granularity": "Hourly",
+      "datacellar:dataPoints": [
+        {
+          "datacellar:timestamp": "2025-05-01T09:00:00Z",
+          "datacellar:value": 18.3
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T10:00:00Z",
+          "datacellar:value": 17.9
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T11:00:00Z",
+          "datacellar:value": 18.8
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T12:00:00Z",
+          "datacellar:value": 19.1
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T13:00:00Z",
+          "datacellar:value": 19.2
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T14:00:00Z",
+          "datacellar:value": 18.5
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T15:00:00Z",
+          "datacellar:value": 17.1
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T16:00:00Z",
+          "datacellar:value": 16.4
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T17:00:00Z",
+          "datacellar:value": 14.9
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T18:00:00Z",
+          "datacellar:value": 14.4
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T19:00:00Z",
+          "datacellar:value": 13.9
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T20:00:00Z",
+          "datacellar:value": 13.4
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T21:00:00Z",
+          "datacellar:value": 12.8
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T22:00:00Z",
+          "datacellar:value": 12.3
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T23:00:00Z",
+          "datacellar:value": 11.9
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T00:00:00Z",
+          "datacellar:value": 11.7
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T01:00:00Z",
+          "datacellar:value": 11.5
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T02:00:00Z",
+          "datacellar:value": 11.4
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T03:00:00Z",
+          "datacellar:value": 11.3
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T04:00:00Z",
+          "datacellar:value": 11.7
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T05:00:00Z",
+          "datacellar:value": 11.8
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T06:00:00Z",
+          "datacellar:value": 13.3
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T07:00:00Z",
+          "datacellar:value": 12.2
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T08:00:00Z",
+          "datacellar:value": 12.6
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T09:00:00Z",
+          "datacellar:value": 16.6
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T10:00:00Z",
+          "datacellar:value": 19.3
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T11:00:00Z",
+          "datacellar:value": 19.9
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T12:00:00Z",
+          "datacellar:value": 21.4
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T13:00:00Z",
+          "datacellar:value": 22.1
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T14:00:00Z",
+          "datacellar:value": 21.7
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T15:00:00Z",
+          "datacellar:value": 20.3
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T16:00:00Z",
+          "datacellar:value": 19.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T17:00:00Z",
+          "datacellar:value": 16.1
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T18:00:00Z",
+          "datacellar:value": 14.7
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T19:00:00Z",
+          "datacellar:value": 13.7
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T20:00:00Z",
+          "datacellar:value": 13.7
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T21:00:00Z",
+          "datacellar:value": 13.3
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T22:00:00Z",
+          "datacellar:value": 12.8
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T23:00:00Z",
+          "datacellar:value": 12.3
+        }
+      ],
+      "datacellar:timeSeriesMetadata": {
+        "@type": "datacellar:PVPanel"
+      }
+    },
+    {
+      "@type": "datacellar:TimeSeries",
+      "datacellar:datasetFieldID": 3,
+      "datacellar:startDate": "2025-05-01T00:00:00Z",
+      "datacellar:endDate": "2025-05-02T23:59:59Z",
+      "datacellar:timeZone": "0",
+      "datacellar:granularity": "Hourly",
+      "datacellar:dataPoints": [
+        {
+          "datacellar:timestamp": "2025-05-01T09:00:00Z",
+          "datacellar:value": 64.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T10:00:00Z",
+          "datacellar:value": 69.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T11:00:00Z",
+          "datacellar:value": 67.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T12:00:00Z",
+          "datacellar:value": 65.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T13:00:00Z",
+          "datacellar:value": 64.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T14:00:00Z",
+          "datacellar:value": 62.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T15:00:00Z",
+          "datacellar:value": 67.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T16:00:00Z",
+          "datacellar:value": 69.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T17:00:00Z",
+          "datacellar:value": 72.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T18:00:00Z",
+          "datacellar:value": 76.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T19:00:00Z",
+          "datacellar:value": 81.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T20:00:00Z",
+          "datacellar:value": 84.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T21:00:00Z",
+          "datacellar:value": 89.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T22:00:00Z",
+          "datacellar:value": 92.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-01T23:00:00Z",
+          "datacellar:value": 94.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T00:00:00Z",
+          "datacellar:value": 94.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T01:00:00Z",
+          "datacellar:value": 95.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T02:00:00Z",
+          "datacellar:value": 94.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T03:00:00Z",
+          "datacellar:value": 97.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T04:00:00Z",
+          "datacellar:value": 98.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T05:00:00Z",
+          "datacellar:value": 98.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T06:00:00Z",
+          "datacellar:value": 90.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T07:00:00Z",
+          "datacellar:value": 96.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T08:00:00Z",
+          "datacellar:value": 97.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T09:00:00Z",
+          "datacellar:value": 79.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T10:00:00Z",
+          "datacellar:value": 72.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T11:00:00Z",
+          "datacellar:value": 63.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T12:00:00Z",
+          "datacellar:value": 47.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T13:00:00Z",
+          "datacellar:value": 45.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T14:00:00Z",
+          "datacellar:value": 42.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T15:00:00Z",
+          "datacellar:value": 45.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T16:00:00Z",
+          "datacellar:value": 53.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T17:00:00Z",
+          "datacellar:value": 72.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T18:00:00Z",
+          "datacellar:value": 77.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T19:00:00Z",
+          "datacellar:value": 81.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T20:00:00Z",
+          "datacellar:value": 78.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T21:00:00Z",
+          "datacellar:value": 84.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T22:00:00Z",
+          "datacellar:value": 85.0
+        },
+        {
+          "datacellar:timestamp": "2025-05-02T23:00:00Z",
+          "datacellar:value": 89.0
+        }
+      ],
+      "datacellar:timeSeriesMetadata": {
+        "@type": "datacellar:PVPanel"
+      }
+    }
+  ],
+  "datacellar:datasetMetadata": [
+    {
+      "@type": "datacellar:Installation",
+      "datacellar:installationType": "localEnergyCommunity",
+      "datacellar:capacity": 20.0,
+      "datacellar:capacityUnit": "kW"
+    }
+  ]
+}
