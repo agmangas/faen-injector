@@ -82,7 +82,12 @@ python test_dotenv_behavior.py
 ## Development Notes
 
 ### API Endpoints Used
-- **FAEN**: `/token`, `/consumption/query`, `/users/me/`
+- **FAEN**: 
+  - `/token` - OAuth2 authentication
+  - `POST /consumption/query` - Consumption data (JSON body)
+  - `GET /generation/` - Generation data (URL parameters)
+  - `GET /weather/` - Weather data (URL parameters)
+  - `/users/me/` - User information
 - **CDE**: `/api/health`, `/api/dataset`, `/api/timeseries`
 
 ### Error Handling

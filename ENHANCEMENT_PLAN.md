@@ -23,8 +23,9 @@ Create datasets with 3 timeseries:
 - **No overlapping user_ids** between consumption and generation datasets
 
 ### API Endpoints
-- **Generation**: `/generation/` - MongoDB-style queries, same as consumption
-- **Weather**: `/weather/` - MongoDB-style queries with datetime_utc filter
+- **Generation**: `GET /generation/` - MongoDB-style queries with `datetime` field, URL parameters
+- **Weather**: `GET /weather/` - MongoDB-style queries with `datetime_utc` field, URL parameters  
+- **Consumption**: `POST /consumption/query` - MongoDB-style queries with `datetime` field, JSON body
 - **All endpoints return hourly data**
 
 ### Weather API Sample
@@ -38,15 +39,17 @@ curl -X 'GET' \
 ## Implementation Tasks
 
 ### 1. Add Generation API Call Functionality
-- [ ] Add `/generation` endpoint support to API client
-- [ ] Use same MongoDB query structure as consumption
-- [ ] Handle generation data structure: `generation_kwh`, `type`, `nominal_power_w`
+- [x] Add `/generation` endpoint support to API client
+- [x] Use GET request with URL parameters (not POST like consumption)
+- [x] Handle generation data structure: `generation_kwh`, `type`, `nominal_power_w`
+- [x] Uses `datetime` field in MongoDB queries (same as consumption)
 
 ### 2. Add Weather API Call Functionality  
-- [ ] Add `/weather` endpoint support to API client
-- [ ] Implement URL-encoded MongoDB query for `datetime_utc` field
-- [ ] Extract only `ta` (temperature) and `hr` (humidity) parameters
-- [ ] Handle null values appropriately
+- [x] Add `/weather` endpoint support to API client
+- [x] Implement URL-encoded MongoDB query for `datetime_utc` field
+- [x] Extract only `ta` (temperature) and `hr` (humidity) parameters
+- [x] Handle null values appropriately
+- [x] Created test script to verify API functionality
 
 ### 3. Enhance data_utils.py
 - [ ] Modify `generate_dataset_definition()` to support multiple timeseries types
@@ -98,10 +101,12 @@ curl -X 'GET' \
 - Weather: Station-based, no user correlation needed
 - All use MongoDB-style date range queries
 
-## Files to Modify
-- `data_utils.py` - Core dataset generation logic
-- Main script (TBD) - API calls and CLI integration
-- Potentially create new utility modules for API abstraction
+## Files Modified/Created
+- ✅ `faen_client.py` - Added `query_generation()` and `query_weather()` methods
+- ✅ `test_api_calls.py` - Test script for new API functionality
+- 🔄 `data_utils.py` - Core dataset generation logic (next)
+- 🔄 Main script (TBD) - API calls and CLI integration
+- 🔄 Potentially create new utility modules for API abstraction
 
 ## Future Enhancements
 - [ ] Add location metadata correlation

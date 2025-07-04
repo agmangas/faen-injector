@@ -147,6 +147,121 @@ class FaenApiClient:
                 print_data("Response content", e.response.text[:200], 1)
             raise
     
+    def query_generation(self, 
+                        query: Dict[str, Any], 
+                        limit: int = 100, 
+                        sort: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Query generation data using GET request with URL parameters
+        
+        Args:
+            query: MongoDB query document
+            limit: Maximum number of results to return
+            sort: Sort key (e.g., "+datetime")
+            
+        Returns:
+            List of generation data records
+        """
+        if not self.access_token:
+            if not self.authenticate():
+                raise Exception("Authentication required before making API calls")
+        
+        print_section("⚡ Querying Generation Data")
+        generation_url = urljoin(self.base_url + '/', 'generation/')
+        print_data("Endpoint", generation_url, 1)
+        
+        # Prepare URL parameters
+        import json
+        
+        params = {
+            'query': json.dumps(query),
+            'limit': limit
+        }
+        
+        if sort:
+            params['sort'] = sort
+            print_data("Sort order", sort, 1)
+        
+        print_data("Limit", str(limit), 1)
+        
+        try:
+            print_info("Sending query request...")
+            response = self.session.get(
+                generation_url,
+                params=params
+            )
+            response.raise_for_status()
+            
+            data = response.json()
+            record_count = len(data) if isinstance(data, list) else 1
+            print_success(f"✓ Retrieved {record_count} generation records")
+            return data
+            
+        except requests.exceptions.RequestException as e:
+            print_error(f"Failed to query generation data: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                print_data("Response status", str(e.response.status_code), 1)
+                print_data("Response content", e.response.text[:200], 1)
+            raise
+    
+    def query_weather(self, 
+                     query: Dict[str, Any], 
+                     limit: int = 100, 
+                     sort: Optional[str] = None) -> List[Dict[str, Any]]:
+        """
+        Query weather data using GET request with URL parameters
+        
+        Args:
+            query: MongoDB query document
+            limit: Maximum number of results to return
+            sort: Sort key (e.g., "+datetime")
+            
+        Returns:
+            List of weather data records
+        """
+        if not self.access_token:
+            if not self.authenticate():
+                raise Exception("Authentication required before making API calls")
+        
+        print_section("🌤️ Querying Weather Data")
+        weather_url = urljoin(self.base_url + '/', 'weather/')
+        print_data("Endpoint", weather_url, 1)
+        
+        # Prepare URL parameters
+        import json
+        from urllib.parse import quote
+        
+        params = {
+            'query': json.dumps(query),
+            'limit': limit
+        }
+        
+        if sort:
+            params['sort'] = sort
+            print_data("Sort order", sort, 1)
+        
+        print_data("Limit", str(limit), 1)
+        
+        try:
+            print_info("Sending query request...")
+            response = self.session.get(
+                weather_url,
+                params=params
+            )
+            response.raise_for_status()
+            
+            data = response.json()
+            record_count = len(data) if isinstance(data, list) else 1
+            print_success(f"✓ Retrieved {record_count} weather records")
+            return data
+            
+        except requests.exceptions.RequestException as e:
+            print_error(f"Failed to query weather data: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                print_data("Response status", str(e.response.status_code), 1)
+                print_data("Response content", e.response.text[:200], 1)
+            raise
+    
     def get_current_user(self) -> Dict[str, Any]:
         """
         Get current user information
@@ -206,6 +321,35 @@ def create_full_day_query(start_date: Union[date, datetime], end_date: Union[dat
         "datetime": {
             "$gte": {"$date": start_datetime.isoformat()},
             "$lt": {"$date": end_datetime.isoformat()}  # Use $lt instead of $lte for cleaner boundaries
+        }
+    }
+
+
+def create_weather_query(start_date: Union[date, datetime], end_date: Union[date, datetime]) -> Dict[str, Any]:
+    """
+    Create a MongoDB query for weather data using datetime_utc field
+    
+    Args:
+        start_date: Start date (date or datetime object)
+        end_date: End date (date or datetime object) - inclusive
+        
+    Returns:
+        MongoDB query document for weather data
+    """
+    # Convert to date objects if datetime objects are passed
+    if isinstance(start_date, datetime):
+        start_date = start_date.date()
+    if isinstance(end_date, datetime):
+        end_date = end_date.date()
+    
+    # Create datetime objects for start of start_date and start of day after end_date
+    start_datetime = datetime.combine(start_date, datetime.min.time())
+    end_datetime = datetime.combine(end_date + timedelta(days=1), datetime.min.time())
+    
+    return {
+        "datetime_utc": {
+            "$gte": {"$date": start_datetime.isoformat()},
+            "$lt": {"$date": end_datetime.isoformat()}
         }
     }
 
