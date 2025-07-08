@@ -85,8 +85,8 @@ def transform_generation_to_datapoints(generation_data: List[Dict[str, Any]], ti
             skipped_records += 1
             continue
         
-        # Get the corresponding timeseries ID
-        timeseries_id = timeseries_mapping.get(str(user_id))
+        # Get the generation timeseries ID (all generation data goes to the same timeseries)
+        timeseries_id = timeseries_mapping.get('generation')
         if not timeseries_id:
             missing_timeseries += 1
             continue
@@ -170,8 +170,8 @@ def transform_weather_to_datapoints(weather_data: List[Dict[str, Any]],
         # Add temperature datapoint if available
         if temperature_value is not None:
             temperature_datapoint = {
-                "measurement": "temperature",
-                "unit": "C",
+                "measurement": "outdoorTemperature",
+                "unit": "Celsius",
                 "value": float(temperature_value),
                 "timestamp": timestamp,
                 "timeseries_id": temperature_timeseries_id
@@ -324,6 +324,18 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
     if not generation_user_ids:
         generation_user_ids = ["generic_generation_user"]
     
+    # Extract coordinates from weather data
+    latitude = None
+    longitude = None
+    if weather_data:
+        # All weather records should have the same lat/lon
+        first_weather_record = weather_data[0]
+        latitude = first_weather_record.get('lat')
+        longitude = first_weather_record.get('lon')
+        print_info(f"Using coordinates from weather data: lat={latitude}, lon={longitude}")
+    else:
+        print_warning("No weather data available for coordinates")
+    
     print_info(f"Creating combined dataset with {len(generation_user_ids)} generation users")
     
     # Create timeseries entries - 3 timeseries total
@@ -341,7 +353,8 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
             "datacellar:dataPoints": [],
             "datacellar:timeSeriesMetadata": {
                 "@type": "datacellar:PVPanel",
-                "datacellar:deviceID": user_id
+                "datacellar:latitude": latitude,
+                "datacellar:longitude": longitude
             }
         }
         timeseries_entries.append(generation_timeseries)
@@ -356,7 +369,9 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
         "datacellar:granularity": "Hourly",
         "datacellar:dataPoints": [],
         "datacellar:timeSeriesMetadata": {
-            "@type": "datacellar:PVPanel"
+            "@type": "datacellar:PVPanel",
+            "datacellar:latitude": latitude,
+            "datacellar:longitude": longitude
         }
     }
     timeseries_entries.append(temperature_timeseries)
@@ -371,7 +386,9 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
         "datacellar:granularity": "Hourly",
         "datacellar:dataPoints": [],
         "datacellar:timeSeriesMetadata": {
-            "@type": "datacellar:PVPanel"
+            "@type": "datacellar:PVPanel",
+            "datacellar:latitude": latitude,
+            "datacellar:longitude": longitude
         }
     }
     timeseries_entries.append(humidity_timeseries)
@@ -429,12 +446,12 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
                 {
                     "@type": "datacellar:DatasetField",
                     "datacellar:datasetFieldID": 2,
-                    "datacellar:name": "temperature",
+                    "datacellar:name": "outdoorTemperature",
                     "datacellar:description": "Ambient temperature in Celsius",
                     "datacellar:timeseriesMetadataType": "datacellar:PVPanel",
                     "datacellar:fieldType": {
                         "@type": "datacellar:FieldType",
-                        "datacellar:unit": "C",
+                        "datacellar:unit": "Celsius",
                         "datacellar:averagable": True,
                         "datacellar:summable": False,
                         "datacellar:anonymizable": False

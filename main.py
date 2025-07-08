@@ -15,11 +15,12 @@ from console_utils import (
     print_info, print_data, print_json_preview, confirm_proceed,
     get_dataset_name_input, get_date_range_input, get_limit_input, Colors
 )
-from faen_client import FaenApiClient, create_full_day_query
+from faen_client import FaenApiClient, create_full_day_query, create_weather_query
 from cde_client import CDEApiClient
 from data_utils import (
     generate_dataset_definition, save_dataset_definition,
-    transform_faen_to_datapoints
+    transform_faen_to_datapoints, generate_combined_dataset_definition,
+    transform_generation_to_datapoints, transform_weather_to_datapoints
 )
 
 # Constants - default values (will be overridden by environment variables)
@@ -139,6 +140,28 @@ def main():
                 print_info("❌ Operation cancelled by user")
                 return
             
+            # Dataset type selection
+            print_section("📊 Dataset Type Selection")
+            print_info("Available dataset types:")
+            print_data("1", "Building Consumption (energy consumption data)", 1)
+            print_data("2", "Photovoltaic Generation (generation + weather data)", 1)
+            print_data("3", "Both types (creates separate datasets)", 1)
+            
+            while True:
+                try:
+                    choice = input("\nSelect dataset type (1-3): ").strip()
+                    if choice in ['1', '2', '3']:
+                        break
+                    print_warning("Please enter 1, 2, or 3")
+                except (EOFError, KeyboardInterrupt):
+                    print_info("\n❌ Operation cancelled by user")
+                    return
+            
+            create_consumption = choice in ['1', '3']
+            create_generation = choice in ['2', '3']
+            
+            print_info(f"Selected: {'Consumption' if create_consumption else ''}{'Both' if create_consumption and create_generation else ''}{'Generation + Weather' if create_generation and not create_consumption else ''}")
+            
             # Get user input for date range and limit
             start_date, end_date = get_date_range_input()
             limit = get_limit_input()
@@ -146,13 +169,13 @@ def main():
             print_section("📅 Final Configuration Summary")
             today = date.today()
             print_data("Today", str(today), 1)
-            print_data("Query start date", f"{start_date} (00:00:00)", 1)
+            print_data("Query start date", f"{start_date} (00:00:00, inclusive)", 1)
             print_data(
                 "Query end date",
-                f"{end_date} (inclusive, until 00:00:00 next day)",
+                f"{end_date} (exclusive, up to 00:00:00)",
                 1
             )
-            total_days = (end_date - start_date).days + 1
+            total_days = (end_date - start_date).days
             print_data("Total days", f"{total_days} complete days", 1)
             print_data("Record limit", f"{limit} records maximum", 1)
             
@@ -162,316 +185,440 @@ def main():
             print_data("Query type", "Full day range query", 1)
             print_json_preview(query)
             
-            # Query consumption data
-            consumption_data = faen_client.query_consumption(
-                query=query,
-                limit=limit,
-                sort="+datetime"
-            )
+            # Initialize data containers
+            consumption_data = []
+            generation_data = []
+            weather_data = []
+            
+            # Query data based on selection
+            if create_consumption:
+                print_section("🏢 Querying Consumption Data")
+                consumption_data = faen_client.query_consumption(
+                    query=query,
+                    limit=limit,
+                    sort="+datetime"
+                )
+                print_data("Consumption records", str(len(consumption_data)), 1)
+            
+            if create_generation:
+                print_section("⚡ Querying Generation Data")
+                generation_data = faen_client.query_generation(
+                    query=query,
+                    limit=limit,
+                    sort="+datetime"
+                )
+                print_data("Generation records", str(len(generation_data)), 1)
+                
+                print_section("🌤️ Querying Weather Data")
+                weather_query = create_weather_query(start_date, end_date)
+                weather_data = faen_client.query_weather(
+                    query=weather_query,
+                    limit=limit,
+                    sort="+datetime_utc"
+                )
+                print_data("Weather records", str(len(weather_data)), 1)
             
             print_section("📋 FAEN Results Summary")
-            print_data("Total records", str(len(consumption_data)), 1)
+            total_records = len(consumption_data) + len(generation_data) + len(weather_data)
+            print_data("Total records retrieved", str(total_records), 1)
+            if create_consumption:
+                print_data("Consumption records", str(len(consumption_data)), 1)
+            if create_generation:
+                print_data("Generation records", str(len(generation_data)), 1)
+                print_data("Weather records", str(len(weather_data)), 1)
             
             # Confirmation point 2: After data retrieval
             if not confirm_proceed(
-                f"Retrieved {len(consumption_data)} records from FAEN. Do you "
+                f"Retrieved {total_records} records from FAEN. Do you "
                 f"want to continue with dataset generation?"
             ):
                 print_info("❌ Operation cancelled by user")
                 return
             
             # Print first few records
-            if consumption_data:
+            if consumption_data or generation_data or weather_data:
                 print_section("📊 Sample FAEN Data")
-                # Show only limited records to save space
-                for i, record in enumerate(consumption_data[:SAMPLE_RECORDS_DISPLAY]):
-                    print(
-                        f"\n{Colors.BOLD}{Colors.MAGENTA}  Record {i+1}:"
-                        f"{Colors.RESET}"
-                    )
-                    print_json_preview(record)
                 
-                if len(consumption_data) > SAMPLE_RECORDS_DISPLAY:
-                    remaining = len(consumption_data) - SAMPLE_RECORDS_DISPLAY
-                    print(
-                        f"\n{Colors.GRAY}  ... and {remaining} more records"
-                        f"{Colors.RESET}"
-                    )
-                
-                # Generate dataset definition
-                print_section("📋 Dataset Definition Generation")
-                print_info(
-                    "Generating dataset definition from date range..."
-                )
-                
-                dataset_definition = generate_dataset_definition(
-                    start_date, end_date, consumption_data
-                )
-                
-                print_success("✓ Dataset definition generated successfully")
-                print_data(
-                    "Dataset name",
-                    dataset_definition.get('datacellar:name', 'Unknown'),
-                    1
-                )
-                print_data(
-                    "Dataset description",
-                    dataset_definition.get('datacellar:description', 'Unknown'),
-                    1
-                )
-                
-                timeseries_list = dataset_definition.get('datacellar:timeSeries', [])
-                print_data("Number of timeseries", str(len(timeseries_list)), 1)
-                
-                if timeseries_list:
-                    first_timeseries = timeseries_list[0]
-                    print_data(
-                        "Time series start",
-                        first_timeseries.get('datacellar:startDate', 'Unknown'),
-                        1
-                    )
-                    print_data(
-                        "Time series end",
-                        first_timeseries.get('datacellar:endDate', 'Unknown'),
-                        1
-                    )
-                    print_data(
-                        "Granularity",
-                        first_timeseries.get('datacellar:granularity', 'Unknown'),
-                        1
-                    )
+                # Show consumption data samples
+                if consumption_data:
+                    print_info("Consumption Data Sample:")
+                    for i, record in enumerate(consumption_data[:SAMPLE_RECORDS_DISPLAY]):
+                        print(
+                            f"\n{Colors.BOLD}{Colors.MAGENTA}  Consumption Record {i+1}:"
+                            f"{Colors.RESET}"
+                        )
+                        print_json_preview(record)
                     
-                    # Show user IDs for first few timeseries
-                    user_ids = []
-                    # Show first few user IDs
-                    for ts in timeseries_list[:MAX_USER_IDS_DISPLAY]:
-                        metadata = ts.get('datacellar:timeSeriesMetadata', {})
-                        user_id = metadata.get('datacellar:deviceID', 'Unknown')
-                        user_ids.append(str(user_id))
+                    if len(consumption_data) > SAMPLE_RECORDS_DISPLAY:
+                        remaining = len(consumption_data) - SAMPLE_RECORDS_DISPLAY
+                        print(
+                            f"\n{Colors.GRAY}  ... and {remaining} more consumption records"
+                            f"{Colors.RESET}"
+                        )
+                
+                # Show generation data samples
+                if generation_data:
+                    print_info("Generation Data Sample:")
+                    for i, record in enumerate(generation_data[:SAMPLE_RECORDS_DISPLAY]):
+                        print(
+                            f"\n{Colors.BOLD}{Colors.MAGENTA}  Generation Record {i+1}:"
+                            f"{Colors.RESET}"
+                        )
+                        print_json_preview(record)
                     
-                    user_ids_display = ', '.join(user_ids)
-                    if len(timeseries_list) > MAX_USER_IDS_DISPLAY:
-                        additional = len(timeseries_list) - MAX_USER_IDS_DISPLAY
-                        user_ids_display += f", ... (+{additional} more)"
+                    if len(generation_data) > SAMPLE_RECORDS_DISPLAY:
+                        remaining = len(generation_data) - SAMPLE_RECORDS_DISPLAY
+                        print(
+                            f"\n{Colors.GRAY}  ... and {remaining} more generation records"
+                            f"{Colors.RESET}"
+                        )
+                
+                # Show weather data samples
+                if weather_data:
+                    print_info("Weather Data Sample:")
+                    for i, record in enumerate(weather_data[:SAMPLE_RECORDS_DISPLAY]):
+                        print(
+                            f"\n{Colors.BOLD}{Colors.MAGENTA}  Weather Record {i+1}:"
+                            f"{Colors.RESET}"
+                        )
+                        print_json_preview(record)
                     
-                    print_data("User IDs", user_ids_display, 1)
+                    if len(weather_data) > SAMPLE_RECORDS_DISPLAY:
+                        remaining = len(weather_data) - SAMPLE_RECORDS_DISPLAY
+                        print(
+                            f"\n{Colors.GRAY}  ... and {remaining} more weather records"
+                            f"{Colors.RESET}"
+                        )
                 
-                # Get custom dataset name from user
-                default_name = dataset_definition.get(
-                    'datacellar:name', 'FAEN Dataset'
-                )
-                custom_name = get_dataset_name_input(default_name)
+                # Generate dataset definitions based on selection
+                datasets_to_process = []
                 
-                # Update dataset definition with custom name
-                if custom_name != default_name:
-                    dataset_definition['datacellar:name'] = custom_name
-                    print_info(f"Dataset name updated to: {custom_name}")
+                if create_consumption and consumption_data:
+                    print_section("📋 Building Consumption Dataset Generation")
+                    print_info("Generating consumption dataset definition...")
+                    
+                    consumption_dataset = generate_dataset_definition(
+                        start_date, end_date, consumption_data
+                    )
+                    datasets_to_process.append({
+                        'definition': consumption_dataset,
+                        'type': 'consumption',
+                        'data': consumption_data,
+                        'name': 'Building Consumption Dataset'
+                    })
+                    
+                    print_success("✓ Consumption dataset definition generated")
+                    print_data("Dataset name", consumption_dataset.get('datacellar:name', 'Unknown'), 1)
+                    timeseries_list = consumption_dataset.get('datacellar:timeSeries', [])
+                    print_data("Number of timeseries", str(len(timeseries_list)), 1)
                 
-                # Confirmation point 3: After dataset generation and naming
-                if not confirm_proceed(
-                    "Dataset definition ready. Do you want to save it to file?"
-                ):
-                    print_info("❌ Operation cancelled by user")
+                if create_generation and generation_data and weather_data:
+                    print_section("📋 Photovoltaic Generation Dataset Generation")
+                    print_info("Generating combined generation + weather dataset definition...")
+                    
+                    generation_dataset = generate_combined_dataset_definition(
+                        start_date, end_date, generation_data, weather_data
+                    )
+                    datasets_to_process.append({
+                        'definition': generation_dataset,
+                        'type': 'generation',
+                        'data': {'generation': generation_data, 'weather': weather_data},
+                        'name': 'Photovoltaic Generation Dataset'
+                    })
+                    
+                    print_success("✓ Generation dataset definition generated")
+                    print_data("Dataset name", generation_dataset.get('datacellar:name', 'Unknown'), 1)
+                    timeseries_list = generation_dataset.get('datacellar:timeSeries', [])
+                    print_data("Number of timeseries", str(len(timeseries_list)), 1)
+                
+                elif create_generation and (not generation_data or not weather_data):
+                    print_warning("⚠ Cannot create generation dataset - insufficient data")
+                    print_data("Generation records", str(len(generation_data)), 1)
+                    print_data("Weather records", str(len(weather_data)), 1)
+                
+                if not datasets_to_process:
+                    print_error("❌ No datasets can be generated with available data")
                     return
                 
-                # Save dataset definition to filesystem
-                print_section("💾 Saving Dataset Definition")
-                dataset_file_path = save_dataset_definition(
-                    dataset_definition, start_date, end_date
-                )
+                print_section("📊 Dataset Summary")
+                print_data("Total datasets to create", str(len(datasets_to_process)), 1)
+                for i, dataset_info in enumerate(datasets_to_process, 1):
+                    print_data(f"Dataset {i}", f"{dataset_info['name']} ({dataset_info['type']})", 1)
                 
-                # Confirmation point 4: Before CDE upload
+                # Process each dataset
+                for dataset_info in datasets_to_process:
+                    dataset_definition = dataset_info['definition']
+                    dataset_type = dataset_info['type']
+                    
+                    print_section(f"📝 Processing {dataset_info['name']}")
+                    
+                    # Get custom dataset name from user
+                    default_name = dataset_definition.get(
+                        'datacellar:name', 'FAEN Dataset'
+                    )
+                    custom_name = get_dataset_name_input(f"{default_name} ({dataset_type})")
+                    
+                    # Update dataset definition with custom name
+                    if custom_name != default_name:
+                        dataset_definition['datacellar:name'] = custom_name
+                        print_info(f"Dataset name updated to: {custom_name}")
+                    
+                    # Confirmation point 3: After dataset generation and naming
+                    if not confirm_proceed(
+                        f"Dataset definition ready for {dataset_type}. Do you want to save it to file?"
+                    ):
+                        print_info("❌ Operation cancelled by user")
+                        continue
+                    
+                    # Save dataset definition to filesystem
+                    print_section(f"💾 Saving {dataset_type.title()} Dataset Definition")
+                    dataset_file_path = save_dataset_definition(
+                        dataset_definition, start_date, end_date, dataset_type
+                    )
+                    
+                    # Store file path for later processing
+                    dataset_info['file_path'] = dataset_file_path
+                
+                # Process CDE uploads
                 if not confirm_proceed(
-                    "Dataset saved successfully. Do you want to upload it to CDE?"
+                    f"All dataset definitions saved. Do you want to upload them to CDE?"
                 ):
                     print_info("❌ CDE upload cancelled by user")
-                    print_info(
-                        "💡 Dataset file saved locally for manual upload when ready"
-                    )
+                    print_info("💡 Dataset files saved locally for manual upload when ready")
                     return
                 
-                # Upload dataset to CDE
-                print_section("⬆️ Uploading Dataset to CDE")
-                upload_successful = False
-                dataset_name = dataset_definition.get('datacellar:name', '')
-                dataset_id = None
+                # Upload datasets to CDE
+                print_section("⬆️ Uploading Datasets to CDE")
                 
-                upload_result = cde_client.upload_dataset(dataset_file_path)
+                successful_uploads = []
                 
-                if upload_result:
-                    upload_successful = True
-                    print_success("✓ Dataset successfully uploaded to CDE")
+                for dataset_info in datasets_to_process:
+                    if 'file_path' not in dataset_info:
+                        continue
+                        
+                    dataset_definition = dataset_info['definition']
+                    dataset_type = dataset_info['type']
+                    dataset_file_path = dataset_info['file_path']
                     
-                    # Extract dataset ID from the response
-                    dataset_id = upload_result.get('dataset_id')
-                    if dataset_id:
-                        print_data("Dataset ID", dataset_id, 1)
+                    print_info(f"Uploading {dataset_type} dataset...")
                     
-                    if isinstance(upload_result, dict) and 'message' in upload_result:
-                        print_data("CDE Response", upload_result['message'], 1)
-                    elif isinstance(upload_result, dict):
-                        print_data("CDE Response", str(upload_result), 1)
+                    upload_result = cde_client.upload_dataset(dataset_file_path)
                     
-                    # Confirmation point 5: Before datapoint upload
-                    if not confirm_proceed(
-                        "Dataset uploaded to CDE successfully. Do you want to "
-                        "proceed with uploading datapoints?"
-                    ):
-                        print_info("❌ Datapoint upload cancelled by user")
-                        print_info(
-                            "💡 Dataset is available in CDE, datapoints can be "
-                            "uploaded separately"
-                        )
-                        return
+                    if upload_result:
+                        print_success(f"✓ {dataset_type.title()} dataset uploaded successfully")
+                        
+                        # Extract dataset ID from the response
+                        dataset_id = upload_result.get('dataset_id')
+                        if dataset_id:
+                            print_data(f"{dataset_type.title()} Dataset ID", dataset_id, 1)
+                        
+                        dataset_info['upload_result'] = upload_result
+                        dataset_info['dataset_id'] = dataset_id
+                        successful_uploads.append(dataset_info)
+                    else:
+                        print_error(f"✗ Failed to upload {dataset_type} dataset")
+                
+                if not successful_uploads:
+                    print_error("❌ No datasets were successfully uploaded")
+                    return
+                
+                # Confirmation point 5: Before datapoint upload
+                if not confirm_proceed(
+                    f"{len(successful_uploads)} dataset(s) uploaded successfully. Do you want to "
+                    "proceed with uploading datapoints?"
+                ):
+                    print_info("❌ Datapoint upload cancelled by user")
+                    print_info("💡 Datasets are available in CDE, datapoints can be uploaded separately")
+                    return
+                
+                # Upload datapoints for each successful dataset
+                print_section("📊 Uploading Datapoints to CDE")
+                
+                for dataset_info in successful_uploads:
+                    dataset_type = dataset_info['type']
+                    dataset_definition = dataset_info['definition']
+                    dataset_id = dataset_info['dataset_id']
+                    dataset_name = dataset_definition.get('datacellar:name', '')
                     
-                    # Step 3: Get timeseries from CDE and upload datapoints
-                    print_section("📊 Uploading Datapoints to CDE")
+                    print_info(f"Processing datapoints for {dataset_type} dataset...")
                     
-                    # Fetch timeseries from CDE using dataset ID (preferred)
-                    # or name (fallback)
+                    # Get timeseries from CDE
                     timeseries_list = cde_client.get_timeseries(
                         dataset_id=dataset_id, dataset_name=dataset_name
                     )
                     
-                    if timeseries_list:
-                        # Log all retrieved timeseries IDs
-                        print_info("Retrieved timeseries from CDE:")
-                        for i, ts in enumerate(timeseries_list, 1):
-                            ts_id = ts.get('id', 'Unknown')
-                            print_data(f"Timeseries {i}", ts_id, 2)
-                        print_data("Total timeseries retrieved", str(len(timeseries_list)), 1)
-                        
-                        # Create mapping of user_id to timeseries_id
+                    if not timeseries_list:
+                        print_error(f"✗ Failed to retrieve timeseries for {dataset_type} dataset")
+                        continue
+                    
+                    print_info(f"Retrieved {len(timeseries_list)} timeseries from CDE")
+                    
+                    # Process datapoints based on dataset type
+                    if dataset_type == 'consumption':
+                        # Create mapping and transform consumption data
                         timeseries_mapping = {}
-                        
-                        print_info("Mapping timeseries IDs to user IDs...")
                         for ts in timeseries_list:
-                            # Extract user_id from timeseries metadata
                             metadata = ts.get('timeSeriesMetadata', {})
                             device_id = metadata.get('datacellar:deviceID')
                             ts_id = ts.get('id')
-                            
                             if device_id and ts_id:
                                 timeseries_mapping[str(device_id)] = ts_id
-                                print_data(f"User {device_id}", ts_id, 2)
-                            else:
-                                print_warning(
-                                    f"⚠ Missing mapping data - device_id: "
-                                    f"{device_id}, ts_id: {ts_id}"
-                                )
-                        
-                        print_data("Total mappings", str(len(timeseries_mapping)), 1)
                         
                         if timeseries_mapping:
-                            # Transform FAEN data to CDE datapoint format
                             datapoints = transform_faen_to_datapoints(
-                                consumption_data, timeseries_mapping
+                                dataset_info['data'], timeseries_mapping
                             )
-                            
-                            if datapoints:
-                                # Upload datapoints in batches
-                                batch_result = cde_client.add_datapoints_batch(
-                                    datapoints, batch_size=DEFAULT_BATCH_SIZE
-                                )
-                                
-                                print_section("📈 Datapoint Upload Results")
-                                print_data(
-                                    "Total datapoints", str(batch_result['total']), 1
-                                )
-                                print_data(
-                                    "Successfully uploaded",
-                                    str(batch_result['success']),
-                                    1
-                                )
-                                print_data(
-                                    "Failed uploads", str(batch_result['failed']), 1
-                                )
-                                
-                                if batch_result['success'] > 0:
-                                    total = batch_result['total']
-                                    success = batch_result['success']
-                                    success_rate = (success / total) * 100
-                                    print_data(
-                                        "Success rate", f"{success_rate:.1f}%", 1
-                                    )
-                                    
-                                    if batch_result['failed'] == 0:
-                                        print_success(
-                                            "🎉 All datapoints uploaded successfully!"
-                                        )
-                                    else:
-                                        failed = batch_result['failed']
-                                        print_warning(
-                                            f"⚠ {failed} datapoints failed to upload"
-                                        )
-                            else:
-                                print_warning(
-                                    "⚠ No valid datapoints generated from FAEN data"
-                                )
                         else:
-                            print_error("✗ No timeseries mappings found")
-                    else:
-                        print_error("✗ Failed to retrieve timeseries from CDE")
-                        print_warning(
-                            "⚠ Cannot upload datapoints without timeseries IDs"
-                        )
-                else:
-                    print_error("✗ Failed to upload dataset to CDE")
-                    print_warning(
-                        "⚠ Dataset file is saved locally and can be uploaded "
-                        "manually"
-                    )
-                
-                print_header("✅ FAEN ➔ CDE Integration Completed")
-                print_success(
-                    f"✓ Successfully retrieved {len(consumption_data)} FAEN records"
-                )
-                print_success("✓ Successfully generated dataset definition")
-                print_success(
-                    f"✓ Dataset definition saved to: {dataset_file_path}"
-                )
-                
-                if upload_successful:
-                    print_success("✓ Dataset successfully uploaded to CDE")
+                            datapoints = []
                     
-                    # Check if datapoints were also uploaded
-                    if 'batch_result' in locals():
-                        if batch_result['success'] > 0:
-                            success_count = batch_result['success']
-                            print_success(
-                                f"✓ Successfully uploaded {success_count} datapoints "
-                                f"to CDE"
+                    elif dataset_type == 'generation':
+                        # Create mapping using datasetField information from CDE
+                        timeseries_mapping = {}
+                        
+                        for ts in timeseries_list:
+                            dataset_field = ts.get('datasetField', {})
+                            field_id = dataset_field.get('datacellar:datasetFieldID')
+                            field_name = dataset_field.get('datacellar:name')
+                            ts_id = ts.get('id')
+                            
+                            print_info(f"Processing timeseries {ts_id}:")
+                            print_data("Field ID", str(field_id), 2)
+                            print_data("Field Name", str(field_name), 2)
+                            
+                            if not field_id or not ts_id:
+                                print_warning(f"⚠ Missing field ID or timeseries ID for {ts_id}")
+                                continue
+                            
+                            # Map by field ID (handle both string and integer)
+                            field_id_str = str(field_id)
+                            mapped = False
+                            
+                            if field_id_str == "1":
+                                timeseries_mapping['generation'] = ts_id
+                                print_data("Mapped to", "generation (by ID)", 2)
+                                mapped = True
+                            elif field_id_str == "2":
+                                timeseries_mapping['outdoorTemperature'] = ts_id
+                                print_data("Mapped to", "outdoorTemperature (by ID)", 2)
+                                mapped = True
+                            elif field_id_str == "3":
+                                timeseries_mapping['humidity'] = ts_id
+                                print_data("Mapped to", "humidity (by ID)", 2)
+                                mapped = True
+                            
+                            # Fallback: try mapping by field name
+                            if not mapped and field_name:
+                                if field_name == "generatedEnergy":
+                                    timeseries_mapping['generation'] = ts_id
+                                    print_data("Mapped to", "generation (by name)", 2)
+                                    mapped = True
+                                elif field_name == "outdoorTemperature":
+                                    timeseries_mapping['outdoorTemperature'] = ts_id
+                                    print_data("Mapped to", "outdoorTemperature (by name)", 2)
+                                    mapped = True
+                                elif field_name == "humidityLevel":
+                                    timeseries_mapping['humidity'] = ts_id
+                                    print_data("Mapped to", "humidity (by name)", 2)
+                                    mapped = True
+                            
+                            if not mapped:
+                                print_warning(f"⚠ Could not map timeseries {ts_id} (ID: {field_id}, Name: {field_name})")
+                        
+                        print_info(f"Final timeseries mapping: {timeseries_mapping}")
+                        
+                        # Validate we have all required mappings
+                        expected_mappings = ['generation', 'outdoorTemperature', 'humidity']
+                        missing_mappings = [m for m in expected_mappings if m not in timeseries_mapping]
+                        if missing_mappings:
+                            print_warning(f"⚠ Missing mappings for: {', '.join(missing_mappings)}")
+                        
+                        if timeseries_mapping:
+                            # Transform generation data
+                            generation_datapoints = transform_generation_to_datapoints(
+                                dataset_info['data']['generation'], timeseries_mapping
                             )
-                            if batch_result['failed'] == 0:
-                                print_info(
-                                    "🎉 Complete integration pipeline executed "
-                                    "successfully!"
-                                )
-                            else:
-                                failed_count = batch_result['failed']
-                                print_info(
-                                    f"⚠ Integration completed with {failed_count} "
-                                    f"datapoint upload failures"
-                                )
+                            # Transform weather data
+                            weather_datapoints = transform_weather_to_datapoints(
+                                dataset_info['data']['weather'], 
+                                timeseries_mapping.get('outdoorTemperature'),
+                                timeseries_mapping.get('humidity')
+                            )
+                            datapoints = generation_datapoints + weather_datapoints
                         else:
-                            print_warning(
-                                "⚠ Dataset uploaded but no datapoints were "
-                                "successfully added"
-                            )
-                    else:
-                        print_warning(
-                            "⚠ Dataset uploaded but datapoint upload was not "
-                            "attempted"
+                            datapoints = []
+                    
+                    if datapoints:
+                        # Upload datapoints in batches
+                        batch_result = cde_client.add_datapoints_batch(
+                            datapoints, batch_size=DEFAULT_BATCH_SIZE
                         )
+                        
+                        print_info(f"Datapoint upload results for {dataset_type}:")
+                        print_data("Total datapoints", str(batch_result['total']), 2)
+                        print_data("Successfully uploaded", str(batch_result['success']), 2)
+                        print_data("Failed uploads", str(batch_result['failed']), 2)
+                        
+                        if batch_result['success'] > 0:
+                            success_rate = (batch_result['success'] / batch_result['total']) * 100
+                            print_data("Success rate", f"{success_rate:.1f}%", 2)
+                        
+                        dataset_info['datapoint_result'] = batch_result
+                    else:
+                        print_warning(f"⚠ No valid datapoints generated for {dataset_type} dataset")
+                
+                
+                # Final summary
+                print_header("✅ FAEN ➔ CDE Integration Completed")
+                
+                # Data retrieval summary
+                print_success(f"✓ Successfully retrieved {total_records} FAEN records")
+                if create_consumption:
+                    print_success(f"  • {len(consumption_data)} consumption records")
+                if create_generation:
+                    print_success(f"  • {len(generation_data)} generation records")
+                    print_success(f"  • {len(weather_data)} weather records")
+                
+                # Dataset generation summary
+                if datasets_to_process:
+                    print_success(f"✓ Successfully generated {len(datasets_to_process)} dataset definition(s)")
+                    for dataset_info in datasets_to_process:
+                        if 'file_path' in dataset_info:
+                            print_success(f"  • {dataset_info['name']} saved to: {dataset_info['file_path']}")
+                
+                # Upload summary
+                if successful_uploads:
+                    print_success(f"✓ Successfully uploaded {len(successful_uploads)} dataset(s) to CDE")
+                    
+                    total_datapoints_uploaded = 0
+                    total_datapoints_failed = 0
+                    
+                    for dataset_info in successful_uploads:
+                        dataset_type = dataset_info['type']
+                        if 'datapoint_result' in dataset_info:
+                            result = dataset_info['datapoint_result']
+                            success_count = result['success']
+                            failed_count = result['failed']
+                            total_datapoints_uploaded += success_count
+                            total_datapoints_failed += failed_count
+                            
+                            print_success(f"  • {dataset_type.title()}: {success_count} datapoints uploaded")
+                            if failed_count > 0:
+                                print_warning(f"    ⚠ {failed_count} datapoints failed")
+                    
+                    if total_datapoints_uploaded > 0:
+                        print_success(f"✓ Total datapoints uploaded: {total_datapoints_uploaded}")
+                        
+                        if total_datapoints_failed == 0:
+                            print_info("🎉 Complete integration pipeline executed successfully!")
+                        else:
+                            print_info(f"⚠ Integration completed with {total_datapoints_failed} datapoint upload failures")
+                    else:
+                        print_warning("⚠ Datasets uploaded but no datapoints were successfully added")
                 else:
-                    print_info(
-                        "📁 Dataset ready for manual upload to CDE when available"
-                    )
+                    print_info("📁 Dataset files ready for manual upload to CDE when available")
                     
             else:
-                print_warning(
-                    "⚠ No consumption data found for the specified date range"
-                )
+                print_warning("⚠ No data found for the specified date range")
                 print_info("❌ Cannot proceed without data. Exiting.")
                 return
             

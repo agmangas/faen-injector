@@ -301,8 +301,8 @@ def create_full_day_query(start_date: Union[date, datetime], end_date: Union[dat
     Create a MongoDB query for full days (00:00:00 to 00:00:00 next day)
     
     Args:
-        start_date: Start date (date or datetime object)
-        end_date: End date (date or datetime object) - inclusive
+        start_date: Start date (date or datetime object) - inclusive
+        end_date: End date (date or datetime object) - exclusive
         
     Returns:
         MongoDB query document with full day ranges
@@ -330,8 +330,8 @@ def create_weather_query(start_date: Union[date, datetime], end_date: Union[date
     Create a MongoDB query for weather data using datetime_utc field
     
     Args:
-        start_date: Start date (date or datetime object)
-        end_date: End date (date or datetime object) - inclusive
+        start_date: Start date (date or datetime object) - inclusive
+        end_date: End date (date or datetime object) - exclusive
         
     Returns:
         MongoDB query document for weather data

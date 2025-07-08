@@ -161,14 +161,13 @@ def get_date_range_input() -> tuple[date, date]:
     print(f"\n{Colors.BOLD}{Colors.BLUE}📅 Date Range Configuration{Colors.RESET}")
     print(f"{Colors.GRAY}{'─'*50}{Colors.RESET}")
     
-    # Calculate defaults (last 7 full days)
-    today = date.today()
-    default_end_date = today - timedelta(days=1)  # Yesterday
-    default_start_date = default_end_date - timedelta(days=6)  # 7 days total
+    # Set defaults to May-June 2025 range
+    default_start_date = date(2025, 5, 1)  # May 1, 2025
+    default_end_date = date(2025, 6, 1)    # June 1, 2025
     
-    print_data("Default start date", f"{default_start_date} (7 days ago)", 1)
-    print_data("Default end date", f"{default_end_date} (yesterday)", 1)
-    print_data("Default range", "7 complete days", 1)
+    print_data("Default start date", f"{default_start_date} (May 1, 2025, inclusive)", 1)
+    print_data("Default end date", f"{default_end_date} (June 1, 2025, exclusive)", 1)
+    print_data("Default range", "31 complete days (May 2025)", 1)
     
     try:
         # Get start date

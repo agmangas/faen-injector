@@ -1,0 +1,160 @@
+{
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "graph": "@graph",
+    "datacellar": "http://datacellar.org/schema#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "datacellar:capacity": {
+      "@type": "xsd:float"
+    },
+    "datacellar:elevation": {
+      "@type": "xsd:float"
+    },
+    "datacellar:floorArea": {
+      "@type": "xsd:float"
+    },
+    "datacellar:insulationSurface": {
+      "@type": "xsd:float"
+    },
+    "datacellar:latitude": {
+      "@type": "xsd:float"
+    },
+    "datacellar:longitude": {
+      "@type": "xsd:float"
+    },
+    "datacellar:openingsArea": {
+      "@type": "xsd:float"
+    },
+    "datacellar:orientation": {
+      "@type": "xsd:float"
+    },
+    "datacellar:startDate": {
+      "@type": "xsd:dateTime"
+    },
+    "datacellar:endDate": {
+      "@type": "xsd:dateTime"
+    },
+    "datacellar:tilt": {
+      "@type": "xsd:float"
+    },
+    "datacellar:timestamp": {
+      "@type": "xsd:dateTime"
+    },
+    "datacellar:totalAnnualEnergyConsumption": {
+      "@type": "xsd:float"
+    },
+    "datacellar:value": {
+      "@type": "xsd:float"
+    }
+  },
+  "@type": "datacellar:Dataset",
+  "datacellar:name": "FAEN Generation & Weather May-June 2025 (generation)",
+  "datacellar:description": "Combined dataset with generation, temperature, and humidity data from 2025-05-01 to 2025-06-01",
+  "datacellar:datasetDescription": {
+    "@type": "datacellar:DatasetDescription",
+    "datacellar:datasetDescriptionID": 1,
+    "datacellar:datasetMetadataTypes": [
+      "datacellar:GeoLocalizedDataset",
+      "datacellar:Installation"
+    ],
+    "datacellar:datasetFields": [
+      {
+        "@type": "datacellar:DatasetField",
+        "datacellar:datasetFieldID": 1,
+        "datacellar:name": "generatedEnergy",
+        "datacellar:description": "The generated energy of a PV in kWh",
+        "datacellar:timeseriesMetadataType": "datacellar:PVPanel",
+        "datacellar:fieldType": {
+          "@type": "datacellar:FieldType",
+          "datacellar:unit": "kWh",
+          "datacellar:averagable": false,
+          "datacellar:summable": true,
+          "datacellar:anonymizable": false
+        }
+      },
+      {
+        "@type": "datacellar:DatasetField",
+        "datacellar:datasetFieldID": 2,
+        "datacellar:name": "outdoorTemperature",
+        "datacellar:description": "Ambient temperature in Celsius",
+        "datacellar:timeseriesMetadataType": "datacellar:PVPanel",
+        "datacellar:fieldType": {
+          "@type": "datacellar:FieldType",
+          "datacellar:unit": "Celsius",
+          "datacellar:averagable": true,
+          "datacellar:summable": false,
+          "datacellar:anonymizable": false
+        }
+      },
+      {
+        "@type": "datacellar:DatasetField",
+        "datacellar:datasetFieldID": 3,
+        "datacellar:name": "humidityLevel",
+        "datacellar:description": "Humidity level in percentage",
+        "datacellar:timeseriesMetadataType": "datacellar:PVPanel",
+        "datacellar:fieldType": {
+          "@type": "datacellar:FieldType",
+          "datacellar:unit": "Percent",
+          "datacellar:averagable": true,
+          "datacellar:summable": false,
+          "datacellar:anonymizable": false
+        }
+      }
+    ]
+  },
+  "datacellar:timeSeries": [
+    {
+      "@type": "datacellar:TimeSeries",
+      "datacellar:datasetFieldID": 1,
+      "datacellar:startDate": "2025-05-01T00:00:00Z",
+      "datacellar:endDate": "2025-06-01T23:59:59Z",
+      "datacellar:timeZone": "0",
+      "datacellar:granularity": "Hourly",
+      "datacellar:dataPoints": [],
+      "datacellar:timeSeriesMetadata": {
+        "@type": "datacellar:PVPanel",
+        "datacellar:latitude": 43.353333,
+        "datacellar:longitude": -5.873889
+      }
+    },
+    {
+      "@type": "datacellar:TimeSeries",
+      "datacellar:datasetFieldID": 2,
+      "datacellar:startDate": "2025-05-01T00:00:00Z",
+      "datacellar:endDate": "2025-06-01T23:59:59Z",
+      "datacellar:timeZone": "0",
+      "datacellar:granularity": "Hourly",
+      "datacellar:dataPoints": [],
+      "datacellar:timeSeriesMetadata": {
+        "@type": "datacellar:PVPanel",
+        "datacellar:latitude": 43.353333,
+        "datacellar:longitude": -5.873889
+      }
+    },
+    {
+      "@type": "datacellar:TimeSeries",
+      "datacellar:datasetFieldID": 3,
+      "datacellar:startDate": "2025-05-01T00:00:00Z",
+      "datacellar:endDate": "2025-06-01T23:59:59Z",
+      "datacellar:timeZone": "0",
+      "datacellar:granularity": "Hourly",
+      "datacellar:dataPoints": [],
+      "datacellar:timeSeriesMetadata": {
+        "@type": "datacellar:PVPanel",
+        "datacellar:latitude": 43.353333,
+        "datacellar:longitude": -5.873889
+      }
+    }
+  ],
+  "datacellar:datasetMetadata": [
+    {
+      "@type": "datacellar:Installation",
+      "datacellar:installationType": "localEnergyCommunity",
+      "datacellar:capacity": 20.0,
+      "datacellar:capacityUnit": "kW"
+    }
+  ]
+}
