@@ -27,7 +27,7 @@
    "@type": "datacellar:Dataset",
    "datacellar:name": "FAEN Consumption July 2022",
    "datacellar:description": "Dataset covering the consumption of FAEN users in July 2022",
-   "datacellar:datasetDescription": {
+   "datacellar:datasetSelfDescription": {
       "@type": "datacellar:DatasetDescription",
       "datacellar:datasetDescriptionID": 1,
       "datacellar:datasetMetadataTypes": [

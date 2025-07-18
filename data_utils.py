@@ -421,7 +421,7 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
         "@type": "datacellar:Dataset",
         "datacellar:name": title,
         "datacellar:description": f"Combined dataset with generation, temperature, and humidity data from {start_date.isoformat()} to {end_date.isoformat()}",
-        "datacellar:datasetDescription": {
+        "datacellar:datasetSelfDescription": {
             "@type": "datacellar:DatasetDescription",
             "datacellar:datasetDescriptionID": 1,
             "datacellar:datasetMetadataTypes": [
@@ -707,7 +707,7 @@ def generate_dataset_definition(start_date: Union[date, datetime], end_date: Uni
         "@type": "datacellar:Dataset",
         "datacellar:name": title,
         "datacellar:description": f"Dataset covering the consumption of FAEN users from {start_date.isoformat()} to {end_date.isoformat()}",
-        "datacellar:datasetDescription": {
+        "datacellar:datasetSelfDescription": {
             "@type": "datacellar:DatasetDescription",
             "datacellar:datasetDescriptionID": 1,
             "datacellar:datasetMetadataTypes": [

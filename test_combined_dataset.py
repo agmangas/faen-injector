@@ -92,7 +92,7 @@ def test_combined_dataset():
         print_info("Dataset Summary:")
         print_data("Dataset name", dataset_definition.get("datacellar:name", "N/A"), 1)
         print_data("Number of timeseries", len(dataset_definition.get("datacellar:timeSeries", [])), 1)
-        print_data("Number of dataset fields", len(dataset_definition.get("datacellar:datasetDescription", {}).get("datacellar:datasetFields", [])), 1)
+        print_data("Number of dataset fields", len(dataset_definition.get("datacellar:datasetSelfDescription", {}).get("datacellar:datasetFields", [])), 1)
         
         # Show datapoint breakdown
         measurement_counts = {}

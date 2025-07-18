@@ -53,7 +53,7 @@
   "@type": "datacellar:Dataset",
   "datacellar:name": "FAEN Generation & Weather May 2025",
   "datacellar:description": "Combined dataset with generation, temperature, and humidity data from 2025-05-01 to 2025-05-02",
-  "datacellar:datasetDescription": {
+  "datacellar:datasetSelfDescription": {
     "@type": "datacellar:DatasetDescription",
     "datacellar:datasetDescriptionID": 1,
     "datacellar:datasetMetadataTypes": [
