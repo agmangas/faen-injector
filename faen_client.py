@@ -90,11 +90,11 @@ class FaenApiClient:
                          sort: Optional[str] = None,
                          eumed: bool = False) -> List[Dict[str, Any]]:
         """
-        Query consumption data using POST request
+        Query consumption data using POST request with automatic chunking for large date ranges
         
         Args:
             query: MongoDB query document
-            limit: Maximum number of results to return
+            limit: Maximum number of results to return per chunk
             sort: Sort key (e.g., "+datetime")
             eumed: Whether to return EUMED-compliant JSON-LD format
             
@@ -109,6 +109,31 @@ class FaenApiClient:
         consumption_url = urljoin(self.base_url + '/', 'consumption/query')
         print_data("Endpoint", consumption_url, 1)
         
+        # Check if this is a large date range query that needs chunking
+        datetime_range = query.get('datetime', {})
+        if isinstance(datetime_range, dict) and '$gte' in datetime_range and '$lt' in datetime_range:
+            from datetime import datetime, timedelta
+            
+            # Extract start and end dates from query
+            start_date_str = datetime_range['$gte']['$date']
+            end_date_str = datetime_range['$lt']['$date']
+            
+            try:
+                start_date = datetime.fromisoformat(start_date_str.replace('Z', '+00:00'))
+                end_date = datetime.fromisoformat(end_date_str.replace('Z', '+00:00'))
+                
+                # If date range is more than 10 days, use automatic chunking
+                date_diff = end_date - start_date
+                if date_diff.days > 10:
+                    return self._query_consumption_chunked(
+                        consumption_url, query, limit, sort, eumed, 
+                        start_date, end_date
+                    )
+            except (ValueError, TypeError):
+                # If date parsing fails, proceed with single request
+                print_warning("⚠ Could not parse date range, proceeding with single request")
+        
+        # Original single request logic
         request_body = {
             'query': query,
             'limit': limit,
@@ -147,16 +172,124 @@ class FaenApiClient:
                 print_data("Response content", e.response.text[:200], 1)
             raise
     
+    def _query_consumption_chunked(self,
+                                  consumption_url: str,
+                                  base_query: Dict[str, Any],
+                                  limit: int,
+                                  sort: Optional[str],
+                                  eumed: bool,
+                                  start_date: datetime,
+                                  end_date: datetime) -> List[Dict[str, Any]]:
+        """
+        Execute chunked consumption queries for large date ranges (10-day chunks)
+        
+        Args:
+            consumption_url: API endpoint URL
+            base_query: Base MongoDB query document
+            limit: Maximum number of results to return per chunk  
+            sort: Sort key (e.g., "+datetime")
+            eumed: Whether to return EUMED-compliant JSON-LD format
+            start_date: Overall start date for the range
+            end_date: Overall end date for the range
+            
+        Returns:
+            Combined list of consumption data records from all chunks
+        """
+        from datetime import timedelta
+        import json
+        
+        all_records = []
+        current_date = start_date
+        chunk_size_days = 10
+        total_chunks = 0
+        
+        print_info(f"🔄 Large date range detected ({(end_date - start_date).days} days)")
+        print_info(f"🔄 Using automatic 10-day chunking...")
+        
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        
+        while current_date < end_date:
+            # Calculate chunk end date (10 days or remaining time, whichever is smaller)
+            chunk_end_date = min(current_date + timedelta(days=chunk_size_days), end_date)
+            total_chunks += 1
+            
+            # Display the original end date for the last chunk to avoid confusion
+            if chunk_end_date == end_date:
+                # For the last chunk, show the original user-specified end date (exclusive)
+                original_end_user_date = (end_date - timedelta(days=1)).strftime('%Y-%m-%d')
+                display_text = f"{current_date.strftime('%Y-%m-%d')} to {original_end_user_date} (exclusive)"
+            else:
+                display_text = f"{current_date.strftime('%Y-%m-%d')} to {chunk_end_date.strftime('%Y-%m-%d')}"
+            
+            print_data(f"Chunk {total_chunks}", display_text, 1)
+            
+            # Create chunk-specific query
+            chunk_query = base_query.copy()
+            chunk_query['datetime'] = {
+                '$gte': {'$date': current_date.isoformat()},
+                '$lt': {'$date': chunk_end_date.isoformat()}
+            }
+            
+            request_body = {
+                'query': chunk_query,
+                'limit': limit,
+                'eumed': eumed
+            }
+            
+            if sort:
+                request_body['sort'] = sort
+            
+            try:
+                print_info(f"  📡 Requesting chunk {total_chunks}...")
+                response = self.session.post(
+                    consumption_url,
+                    json=request_body,
+                    headers=headers
+                )
+                response.raise_for_status()
+                
+                chunk_data = response.json()
+                chunk_record_count = len(chunk_data) if isinstance(chunk_data, list) else 1
+                
+                if chunk_record_count > 0:
+                    all_records.extend(chunk_data)
+                    print_success(f"  ✓ Retrieved {chunk_record_count} records")
+                else:
+                    print_info(f"  ✓ No data for this period")
+                
+            except requests.exceptions.RequestException as e:
+                print_error(f"  ✗ Failed to retrieve chunk {total_chunks}: {e}")
+                if hasattr(e, 'response') and e.response is not None:
+                    print_data("    Response status", str(e.response.status_code), 1)
+                    print_data("    Response content", e.response.text[:200], 1)
+                
+                # For robustness, continue with next chunk instead of failing completely
+                print_warning("  → Continuing with next chunk...")
+            
+            # Move to next chunk
+            current_date = chunk_end_date
+            
+            # Small delay to avoid overwhelming the API
+            import time
+            time.sleep(0.1)
+        
+        total_records = len(all_records)
+        print_success(f"✓ Completed chunked query: {total_records} total records from {total_chunks} chunks")
+        
+        return all_records
+    
     def query_generation(self, 
                         query: Dict[str, Any], 
                         limit: int = 100, 
                         sort: Optional[str] = None) -> List[Dict[str, Any]]:
         """
-        Query generation data using GET request with URL parameters
+        Query generation data using GET request with automatic chunking for large date ranges
         
         Args:
             query: MongoDB query document
-            limit: Maximum number of results to return
+            limit: Maximum number of results to return per chunk
             sort: Sort key (e.g., "+datetime")
             
         Returns:
@@ -170,7 +303,31 @@ class FaenApiClient:
         generation_url = urljoin(self.base_url + '/', 'generation/')
         print_data("Endpoint", generation_url, 1)
         
-        # Prepare URL parameters
+        # Check if this is a large date range query that needs chunking
+        datetime_range = query.get('datetime', {})
+        if isinstance(datetime_range, dict) and '$gte' in datetime_range and '$lt' in datetime_range:
+            from datetime import datetime, timedelta
+            
+            # Extract start and end dates from query
+            start_date_str = datetime_range['$gte']['$date']
+            end_date_str = datetime_range['$lt']['$date']
+            
+            try:
+                start_date = datetime.fromisoformat(start_date_str.replace('Z', '+00:00'))
+                end_date = datetime.fromisoformat(end_date_str.replace('Z', '+00:00'))
+                
+                # If date range is more than 10 days, use automatic chunking
+                date_diff = end_date - start_date
+                if date_diff.days > 10:
+                    return self._query_generation_chunked(
+                        generation_url, query, limit, sort,
+                        start_date, end_date
+                    )
+            except (ValueError, TypeError):
+                # If date parsing fails, proceed with single request
+                print_warning("⚠ Could not parse date range, proceeding with single request")
+        
+        # Original single request logic
         import json
         
         params = {
@@ -204,16 +361,117 @@ class FaenApiClient:
                 print_data("Response content", e.response.text[:200], 1)
             raise
     
+    def _query_generation_chunked(self,
+                                  generation_url: str,
+                                  base_query: Dict[str, Any],
+                                  limit: int,
+                                  sort: Optional[str],
+                                  start_date: datetime,
+                                  end_date: datetime) -> List[Dict[str, Any]]:
+        """
+        Execute chunked generation queries for large date ranges (10-day chunks)
+        
+        Args:
+            generation_url: API endpoint URL
+            base_query: Base MongoDB query document
+            limit: Maximum number of results to return per chunk  
+            sort: Sort key (e.g., "+datetime")
+            start_date: Overall start date for the range
+            end_date: Overall end date for the range
+            
+        Returns:
+            Combined list of generation data records from all chunks
+        """
+        from datetime import timedelta
+        import json
+        
+        all_records = []
+        current_date = start_date
+        chunk_size_days = 10
+        total_chunks = 0
+        
+        print_info(f"🔄 Large date range detected ({(end_date - start_date).days} days)")
+        print_info(f"🔄 Using automatic 10-day chunking...")
+        
+        while current_date < end_date:
+            # Calculate chunk end date (10 days or remaining time, whichever is smaller)
+            chunk_end_date = min(current_date + timedelta(days=chunk_size_days), end_date)
+            total_chunks += 1
+            
+            # Display the original end date for the last chunk to avoid confusion
+            if chunk_end_date == end_date:
+                # For the last chunk, show the original user-specified end date (exclusive)
+                original_end_user_date = (end_date - timedelta(days=1)).strftime('%Y-%m-%d')
+                display_text = f"{current_date.strftime('%Y-%m-%d')} to {original_end_user_date} (exclusive)"
+            else:
+                display_text = f"{current_date.strftime('%Y-%m-%d')} to {chunk_end_date.strftime('%Y-%m-%d')}"
+            
+            print_data(f"Chunk {total_chunks}", display_text, 1)
+            
+            # Create chunk-specific query
+            chunk_query = base_query.copy()
+            chunk_query['datetime'] = {
+                '$gte': {'$date': current_date.isoformat()},
+                '$lt': {'$date': chunk_end_date.isoformat()}
+            }
+            
+            # Prepare URL parameters
+            params = {
+                'query': json.dumps(chunk_query),
+                'limit': limit
+            }
+            
+            if sort:
+                params['sort'] = sort
+            
+            try:
+                print_info(f"  📡 Requesting chunk {total_chunks}...")
+                response = self.session.get(
+                    generation_url,
+                    params=params
+                )
+                response.raise_for_status()
+                
+                chunk_data = response.json()
+                chunk_record_count = len(chunk_data) if isinstance(chunk_data, list) else 1
+                
+                if chunk_record_count > 0:
+                    all_records.extend(chunk_data)
+                    print_success(f"  ✓ Retrieved {chunk_record_count} records")
+                else:
+                    print_info(f"  ✓ No data for this period")
+                
+            except requests.exceptions.RequestException as e:
+                print_error(f"  ✗ Failed to retrieve chunk {total_chunks}: {e}")
+                if hasattr(e, 'response') and e.response is not None:
+                    print_data("    Response status", str(e.response.status_code), 1)
+                    print_data("    Response content", e.response.text[:200], 1)
+                
+                # For robustness, continue with next chunk instead of failing completely
+                print_warning("  → Continuing with next chunk...")
+            
+            # Move to next chunk
+            current_date = chunk_end_date
+            
+            # Small delay to avoid overwhelming the API
+            import time
+            time.sleep(0.1)
+        
+        total_records = len(all_records)
+        print_success(f"✓ Completed chunked query: {total_records} total records from {total_chunks} chunks")
+        
+        return all_records
+    
     def query_weather(self, 
                      query: Dict[str, Any], 
                      limit: int = 100, 
                      sort: Optional[str] = None) -> List[Dict[str, Any]]:
         """
-        Query weather data using GET request with URL parameters
+        Query weather data using GET request with automatic chunking for large date ranges
         
         Args:
             query: MongoDB query document
-            limit: Maximum number of results to return
+            limit: Maximum number of results to return per chunk
             sort: Sort key (e.g., "+datetime")
             
         Returns:
@@ -227,7 +485,31 @@ class FaenApiClient:
         weather_url = urljoin(self.base_url + '/', 'weather/')
         print_data("Endpoint", weather_url, 1)
         
-        # Prepare URL parameters
+        # Check if this is a large date range query that needs chunking
+        datetime_range = query.get('datetime_utc', {})
+        if isinstance(datetime_range, dict) and '$gte' in datetime_range and '$lt' in datetime_range:
+            from datetime import datetime, timedelta
+            
+            # Extract start and end dates from query
+            start_date_str = datetime_range['$gte']['$date']
+            end_date_str = datetime_range['$lt']['$date']
+            
+            try:
+                start_date = datetime.fromisoformat(start_date_str.replace('Z', '+00:00'))
+                end_date = datetime.fromisoformat(end_date_str.replace('Z', '+00:00'))
+                
+                # If date range is more than 10 days, use automatic chunking
+                date_diff = end_date - start_date
+                if date_diff.days > 10:
+                    return self._query_weather_chunked(
+                        weather_url, query, limit, sort,
+                        start_date, end_date
+                    )
+            except (ValueError, TypeError):
+                # If date parsing fails, proceed with single request
+                print_warning("⚠ Could not parse date range, proceeding with single request")
+        
+        # Original single request logic
         import json
         from urllib.parse import quote
         
@@ -261,6 +543,107 @@ class FaenApiClient:
                 print_data("Response status", str(e.response.status_code), 1)
                 print_data("Response content", e.response.text[:200], 1)
             raise
+    
+    def _query_weather_chunked(self,
+                                weather_url: str,
+                                base_query: Dict[str, Any],
+                                limit: int,
+                                sort: Optional[str],
+                                start_date: datetime,
+                                end_date: datetime) -> List[Dict[str, Any]]:
+        """
+        Execute chunked weather queries for large date ranges (10-day chunks)
+        
+        Args:
+            weather_url: API endpoint URL
+            base_query: Base MongoDB query document
+            limit: Maximum number of results to return per chunk  
+            sort: Sort key (e.g., "+datetime")
+            start_date: Overall start date for the range
+            end_date: Overall end date for the range
+            
+        Returns:
+            Combined list of weather data records from all chunks
+        """
+        from datetime import timedelta
+        import json
+        
+        all_records = []
+        current_date = start_date
+        chunk_size_days = 10
+        total_chunks = 0
+        
+        print_info(f"🔄 Large date range detected ({(end_date - start_date).days} days)")
+        print_info(f"🔄 Using automatic 10-day chunking...")
+        
+        while current_date < end_date:
+            # Calculate chunk end date (10 days or remaining time, whichever is smaller)
+            chunk_end_date = min(current_date + timedelta(days=chunk_size_days), end_date)
+            total_chunks += 1
+            
+            # Display the original end date for the last chunk to avoid confusion
+            if chunk_end_date == end_date:
+                # For the last chunk, show the original user-specified end date (exclusive)
+                original_end_user_date = (end_date - timedelta(days=1)).strftime('%Y-%m-%d')
+                display_text = f"{current_date.strftime('%Y-%m-%d')} to {original_end_user_date} (exclusive)"
+            else:
+                display_text = f"{current_date.strftime('%Y-%m-%d')} to {chunk_end_date.strftime('%Y-%m-%d')}"
+            
+            print_data(f"Chunk {total_chunks}", display_text, 1)
+            
+            # Create chunk-specific query
+            chunk_query = base_query.copy()
+            chunk_query['datetime_utc'] = {
+                '$gte': {'$date': current_date.isoformat()},
+                '$lt': {'$date': chunk_end_date.isoformat()}
+            }
+            
+            # Prepare URL parameters
+            params = {
+                'query': json.dumps(chunk_query),
+                'limit': limit
+            }
+            
+            if sort:
+                params['sort'] = sort
+            
+            try:
+                print_info(f"  📡 Requesting chunk {total_chunks}...")
+                response = self.session.get(
+                    weather_url,
+                    params=params
+                )
+                response.raise_for_status()
+                
+                chunk_data = response.json()
+                chunk_record_count = len(chunk_data) if isinstance(chunk_data, list) else 1
+                
+                if chunk_record_count > 0:
+                    all_records.extend(chunk_data)
+                    print_success(f"  ✓ Retrieved {chunk_record_count} records")
+                else:
+                    print_info(f"  ✓ No data for this period")
+                
+            except requests.exceptions.RequestException as e:
+                print_error(f"  ✗ Failed to retrieve chunk {total_chunks}: {e}")
+                if hasattr(e, 'response') and e.response is not None:
+                    print_data("    Response status", str(e.response.status_code), 1)
+                    print_data("    Response content", e.response.text[:200], 1)
+                
+                # For robustness, continue with next chunk instead of failing completely
+                print_warning("  → Continuing with next chunk...")
+            
+            # Move to next chunk
+            current_date = chunk_end_date
+            
+            # Small delay to avoid overwhelming the API
+            import time
+            time.sleep(0.1)
+        
+        total_records = len(all_records)
+        print_success(f"✓ Completed chunked query: {total_records} total records from {total_chunks} chunks")
+        
+        return all_records
     
     def get_current_user(self) -> Dict[str, Any]:
         """
