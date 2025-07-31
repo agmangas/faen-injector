@@ -5,9 +5,10 @@ Main CLI script that orchestrates the data retrieval and upload workflow
 """
 
 import os
-from datetime import date
+from datetime import date, datetime
 from dotenv import load_dotenv
 from pathlib import Path
+import argparse
 
 # Import our modular components
 from console_utils import (
@@ -27,6 +28,9 @@ from data_utils import (
 SAMPLE_RECORDS_DISPLAY = 2  # Number of sample records to show
 MAX_USER_IDS_DISPLAY = 5    # Maximum number of user IDs to display
 DEFAULT_BATCH_SIZE = 50     # Default batch size for datapoint uploads
+
+# Global variable for non-interactive mode
+NON_INTERACTIVE_MODE = False
 
 
 def load_configuration():
@@ -51,6 +55,86 @@ def load_configuration():
 def main():
     """Main function to demonstrate the FAEN API client with CDE integration"""
     
+    # Set up command line argument parsing
+    parser = argparse.ArgumentParser(
+        description="FAEN API Client for Consumption Data with CDE Integration",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Interactive mode (default)
+  python main.py
+  
+  # Non-interactive mode - consumption data only
+  python main.py --dataset-type 1 --start-date 2025-05-01 --end-date 2025-05-02
+  
+  # Non-interactive mode - generation + weather data
+  python main.py --dataset-type 2 --start-date 2025-05-01 --end-date 2025-05-02
+  
+  # Non-interactive mode - both dataset types
+  python main.py --dataset-type 3 --start-date 2025-05-01 --end-date 2025-05-02
+  
+  # With custom record limit
+  python main.py --dataset-type 1 --start-date 2025-05-01 --end-date 2025-05-02 --limit 100
+        """
+    )
+    
+    parser.add_argument(
+        '--dataset-type', 
+        type=int, 
+        choices=[1, 2, 3],
+        help='Dataset type: 1=Building Consumption, 2=Photovoltaic Generation, 3=Both types'
+    )
+    
+    parser.add_argument(
+        '--start-date', 
+        type=str, 
+        help='Start date in YYYY-MM-DD format (inclusive)'
+    )
+    
+    parser.add_argument(
+        '--end-date', 
+        type=str, 
+        help='End date in YYYY-MM-DD format (exclusive)'
+    )
+    
+    parser.add_argument(
+        '--limit', 
+        type=int, 
+        help='Maximum number of records to retrieve'
+    )
+    
+    parser.add_argument(
+        '--non-interactive', 
+        action='store_true',
+        help='Run in non-interactive mode (auto-confirm all prompts)'
+    )
+    
+    args = parser.parse_args()
+    
+    # Set non-interactive mode flag
+    global NON_INTERACTIVE_MODE
+    NON_INTERACTIVE_MODE = args.non_interactive
+    
+    # Validate non-interactive mode arguments
+    if args.non_interactive:
+        if args.dataset_type is None:
+            print_error("❌ --dataset-type is required in non-interactive mode")
+            return
+        if args.start_date is None:
+            print_error("❌ --start-date is required in non-interactive mode")
+            return
+        if args.end_date is None:
+            print_error("❌ --end-date is required in non-interactive mode")
+            return
+        
+        # Validate date formats
+        try:
+            datetime.strptime(args.start_date, '%Y-%m-%d')
+            datetime.strptime(args.end_date, '%Y-%m-%d')
+        except ValueError:
+            print_error("❌ Dates must be in YYYY-MM-DD format")
+            return
+    
     print_header("FAEN API ➔ CDE Integration Client")
     
     # Load configuration
@@ -65,7 +149,7 @@ def main():
     # Initial confirmation to start the process
     if not confirm_proceed(
         "This script will connect to FAEN API, retrieve data, and upload to "
-        "CDE. Do you want to continue?"
+        "CDE. Do you want to continue?", non_interactive=NON_INTERACTIVE_MODE
     ):
         print_info("❌ Operation cancelled by user")
         return
@@ -135,36 +219,44 @@ def main():
             # Confirmation point 1: After successful authentication
             if not confirm_proceed(
                 "Authentication successful! Do you want to proceed with data "
-                "retrieval configuration?"
+                "retrieval configuration?", non_interactive=NON_INTERACTIVE_MODE
             ):
                 print_info("❌ Operation cancelled by user")
                 return
             
             # Dataset type selection
-            print_section("📊 Dataset Type Selection")
-            print_info("Available dataset types:")
-            print_data("1", "Building Consumption (energy consumption data)", 1)
-            print_data("2", "Photovoltaic Generation (generation + weather data)", 1)
-            print_data("3", "Both types (creates separate datasets)", 1)
-            
-            while True:
-                try:
-                    choice = input("\nSelect dataset type (1-3): ").strip()
-                    if choice in ['1', '2', '3']:
-                        break
-                    print_warning("Please enter 1, 2, or 3")
-                except (EOFError, KeyboardInterrupt):
-                    print_info("\n❌ Operation cancelled by user")
-                    return
-            
-            create_consumption = choice in ['1', '3']
-            create_generation = choice in ['2', '3']
+            if args.dataset_type:
+                # Non-interactive mode: use command line argument
+                choice = str(args.dataset_type)
+                print_info(f"🤖 [NON-INTERACTIVE] Using dataset type from command line: {choice}")
+                create_consumption = choice in ['1', '3']
+                create_generation = choice in ['2', '3']
+            else:
+                # Interactive mode: ask user
+                print_section("📊 Dataset Type Selection")
+                print_info("Available dataset types:")
+                print_data("1", "Building Consumption (energy consumption data)", 1)
+                print_data("2", "Photovoltaic Generation (generation + weather data)", 1)
+                print_data("3", "Both types (creates separate datasets)", 1)
+                
+                while True:
+                    try:
+                        choice = input("\nSelect dataset type (1-3): ").strip()
+                        if choice in ['1', '2', '3']:
+                            break
+                        print_warning("Please enter 1, 2, or 3")
+                    except (EOFError, KeyboardInterrupt):
+                        print_info("\n❌ Operation cancelled by user")
+                        return
+                
+                create_consumption = choice in ['1', '3']
+                create_generation = choice in ['2', '3']
             
             print_info(f"Selected: {'Consumption' if create_consumption else ''}{'Both' if create_consumption and create_generation else ''}{'Generation + Weather' if create_generation and not create_consumption else ''}")
             
             # Get user input for date range and limit
-            start_date, end_date = get_date_range_input()
-            limit = get_limit_input()
+            start_date, end_date = get_date_range_input(args.start_date, args.end_date, NON_INTERACTIVE_MODE)
+            limit = get_limit_input(DEFAULT_BATCH_SIZE if args.limit is None else 50, args.limit)
             
             print_section("📅 Final Configuration Summary")
             today = date.today()
@@ -230,7 +322,7 @@ def main():
             # Confirmation point 2: After data retrieval
             if not confirm_proceed(
                 f"Retrieved {total_records} records from FAEN. Do you "
-                f"want to continue with dataset generation?"
+                f"want to continue with dataset generation?", non_interactive=NON_INTERACTIVE_MODE
             ):
                 print_info("❌ Operation cancelled by user")
                 return
@@ -356,7 +448,12 @@ def main():
                     default_name = dataset_definition.get(
                         'datacellar:name', 'FAEN Dataset'
                     )
-                    custom_name = get_dataset_name_input(f"{default_name} ({dataset_type})")
+                    # In non-interactive mode, use default name
+                    if NON_INTERACTIVE_MODE:
+                        custom_name = default_name
+                        print_info(f"🤖 [NON-INTERACTIVE] Using default dataset name: {custom_name}")
+                    else:
+                        custom_name = get_dataset_name_input(f"{default_name} ({dataset_type})")
                     
                     # Update dataset definition with custom name
                     if custom_name != default_name:
@@ -365,7 +462,7 @@ def main():
                     
                     # Confirmation point 3: After dataset generation and naming
                     if not confirm_proceed(
-                        f"Dataset definition ready for {dataset_type}. Do you want to save it to file?"
+                        f"Dataset definition ready for {dataset_type}. Do you want to save it to file?", non_interactive=NON_INTERACTIVE_MODE
                     ):
                         print_info("❌ Operation cancelled by user")
                         continue
@@ -381,7 +478,7 @@ def main():
                 
                 # Process CDE uploads
                 if not confirm_proceed(
-                    f"All dataset definitions saved. Do you want to upload them to CDE?"
+                    f"All dataset definitions saved. Do you want to upload them to CDE?", non_interactive=NON_INTERACTIVE_MODE
                 ):
                     print_info("❌ CDE upload cancelled by user")
                     print_info("💡 Dataset files saved locally for manual upload when ready")
@@ -425,7 +522,7 @@ def main():
                 # Confirmation point 5: Before datapoint upload
                 if not confirm_proceed(
                     f"{len(successful_uploads)} dataset(s) uploaded successfully. Do you want to "
-                    "proceed with uploading datapoints?"
+                    "proceed with uploading datapoints?", non_interactive=NON_INTERACTIVE_MODE
                 ):
                     print_info("❌ Datapoint upload cancelled by user")
                     print_info("💡 Datasets are available in CDE, datapoints can be uploaded separately")

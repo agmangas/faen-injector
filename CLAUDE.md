@@ -34,12 +34,15 @@ This is the FAEN API client directory within the CDE (Data Cellar) server projec
 
 ### Running the Client
 ```bash
-# Run the main client with interactive CLI
+# Run the main client with interactive CLI (default)
 python main.py
 
 # Alternative: using virtual environment
 source venv/bin/activate
 python main.py
+
+# Non-interactive mode with command line arguments
+python main.py --non-interactive --dataset-type 1 --start-date 2025-01-01 --end-date 2025-01-02 --limit 10
 ```
 
 ### Configuration Setup
@@ -94,21 +97,59 @@ python test_dotenv_behavior.py
 
 ## CLI Features
 
-### Interactive Dataset Selection
-The CLI provides an interactive menu for dataset type selection:
+### Interactive and Non-Interactive Modes
+
+The CLI supports two operation modes:
+
+#### **Interactive Mode** (Default)
+- Provides step-by-step prompts for user input
+- Interactive dataset selection, date range, and limit configuration
+- Confirmation prompts at each major step
+- Ideal for manual operation and debugging
+
+#### **Non-Interactive Mode** (`--non-interactive`)
+- Accepts all configuration via command line arguments
+- Auto-confirms all prompts (automatically answers "Y" to all confirmations)
+- Ideal for automated scripts, CI/CD pipelines, and batch processing
+- Required arguments: `--dataset-type`, `--start-date`, `--end-date`
+- Optional arguments: `--limit`
+
+### Command Line Arguments
+
+```bash
+python main.py [OPTIONS]
+
+Options:
+  --dataset-type {1,2,3}    Dataset type to process:
+                             1 = Building Consumption
+                             2 = Photovoltaic Generation (+ Weather)
+                             3 = Both Types (separate datasets)
+  --start-date YYYY-MM-DD     Start date (inclusive)
+  --end-date YYYY-MM-DD       End date (exclusive)
+  --limit N                   Maximum number of records to retrieve
+  --non-interactive           Run without interactive prompts (auto-confirm)
+  -h, --help                  Show help message and exit
+```
+
+### Dataset Types
+
 1. **Building Consumption**: Energy consumption data from buildings
 2. **Photovoltaic Generation**: Combined generation + weather data (generation, temperature, humidity)
 3. **Both Types**: Creates separate datasets for both consumption and generation data
 
 ### Date Range Configuration  
-- **Default Range**: 2025-05-01 to 2025-06-01 (May 2025, 31 days)
+- **Default Range**: 2025-05-01 to 2025-06-01 (May 2025, 31 days) - Interactive mode only
 - **Inclusive Start**: Start date includes the specified day from 00:00:00
 - **Exclusive End**: End date excludes the specified day (stops at 00:00:00 of end date)
-- **Custom Ranges**: Users can specify custom date ranges in YYYY-MM-DD format
+- **Custom Ranges**: 
+  - Interactive mode: Users prompted for input in YYYY-MM-DD format
+  - Non-interactive mode: Specified via `--start-date` and `--end-date` arguments
+- **Date Validation**: Automatic validation and correction (swaps dates if start > end)
 
 ### Multi-Dataset Processing
 - Parallel processing of multiple dataset types
-- Individual confirmation prompts for each step
+- **Interactive Mode**: Individual confirmation prompts for each step
+- **Non-Interactive Mode**: Auto-confirmation of all steps with visual indicators
 - Comprehensive progress tracking and error reporting
 - Separate upload and datapoint processing for each dataset type
 
@@ -125,11 +166,13 @@ The CLI provides an interactive menu for dataset type selection:
 
 ### Error Handling
 - Comprehensive error reporting with colored console output
-- User confirmation prompts at critical steps with proper exit handling
+- **Interactive Mode**: User confirmation prompts at critical steps with proper exit handling
+- **Non-Interactive Mode**: Automatic error handling and continuation
 - Script exits cleanly if CDE API is unreachable or FAEN authentication fails
 - Graceful handling of Ctrl+C interruption at any point
 - Batch processing with individual failure tracking
 - All "No" responses to confirmation prompts result in clean exit
+- Non-interactive mode validates all arguments before execution
 
 ### Timeseries Field Mapping
 - **Field-Based Mapping**: Uses `datasetField` information from CDE `/api/timeseries` endpoint
@@ -143,5 +186,32 @@ The CLI provides an interactive menu for dataset type selection:
 - **Field Names**: Updated temperature field from "temperature" to "outdoorTemperature"
 - **PVPanel Metadata**: Uses latitude/longitude coordinates instead of deviceID
 - **Weather Queries**: Uses `datetime_utc` field instead of `datetime` for weather data
+
+### Non-Interactive Mode Features
+- **Auto-Confirmation**: All Y/n prompts automatically answered with "Y"
+- **Visual Indicators**: Non-interactive operations marked with "🤖 [NON-INTERACTIVE]" prefix
+- **Argument Validation**: Validates required arguments and date formats before execution
+- **Graceful Fallback**: Falls back to interactive mode if non-interactive arguments are incomplete
+- **Batch Friendly**: Suitable for automation, scripting, and CI/CD pipelines
+
+### Usage Examples
+
+```bash
+# Interactive mode - consumption data
+python main.py
+# (Answers prompts interactively)
+
+# Non-interactive - consumption data only
+python main.py --non-interactive --dataset-type 1 --start-date 2025-01-01 --end-date 2025-01-02
+
+# Non-interactive - generation + weather data with custom limit
+python main.py --non-interactive --dataset-type 2 --start-date 2025-05-01 --end-date 2025-05-03 --limit 5
+
+# Non-interactive - both dataset types with large date range
+python main.py --non-interactive --dataset-type 3 --start-date 2025-01-01 --end-date 2025-12-31 --limit 1000
+
+# View help
+python main.py --help
+```
 
 

@@ -3,6 +3,7 @@
 Console utilities for colored output and user input handling
 """
 
+import os
 import json
 from datetime import datetime, timedelta, date
 from typing import Dict, Any
@@ -89,17 +90,23 @@ def print_json_preview(data: Dict[str, Any], max_items: int = 3):
             break
 
 
-def confirm_proceed(message: str, default: bool = True) -> bool:
+def confirm_proceed(message: str, default: bool = True, non_interactive: bool = False) -> bool:
     """
     Ask user for confirmation to proceed
     
     Args:
         message: Message to display to user
         default: Default choice if user just presses Enter
+        non_interactive: Whether to auto-confirm in non-interactive mode
         
     Returns:
         True if user wants to proceed, False otherwise
     """
+    # Check if we're in non-interactive mode
+    if non_interactive or os.environ.get('NON_INTERACTIVE') == '1':
+        print_info(f"🤖 [NON-INTERACTIVE] Auto-confirming: {message} (Y)")
+        return True
+    
     default_text = "Y/n" if default else "y/N"
     while True:
         try:
@@ -120,16 +127,27 @@ def confirm_proceed(message: str, default: bool = True) -> bool:
             return default
 
 
-def get_dataset_name_input(default_name: str) -> str:
+def get_dataset_name_input(default_name: str, custom_name: str = None) -> str:
     """
     Get dataset name from user input with default fallback
     
     Args:
         default_name: Default dataset name to use if user just presses Enter
+        custom_name: Custom name to use in non-interactive mode (optional)
         
     Returns:
         User's chosen dataset name or default if no input provided
     """
+    # Check if we're in non-interactive mode and have a custom name
+    try:
+        import sys
+        if 'main' in sys.modules:
+            from main import NON_INTERACTIVE_MODE
+            if NON_INTERACTIVE_MODE and custom_name:
+                print_info(f"🤖 [NON-INTERACTIVE] Using custom dataset name: {custom_name}")
+                return custom_name
+    except ImportError:
+        pass
     print(f"\n{Colors.BOLD}{Colors.BLUE}📝 Dataset Name Configuration{Colors.RESET}")
     print(f"{Colors.GRAY}{'─'*50}{Colors.RESET}")
     print_data("Current dataset name", default_name, 1)
@@ -151,13 +169,32 @@ def get_dataset_name_input(default_name: str) -> str:
         return default_name
 
 
-def get_date_range_input() -> tuple[date, date]:
+def get_date_range_input(start_date_str: str = None, end_date_str: str = None, non_interactive: bool = False) -> tuple[date, date]:
     """
     Get start and end dates from user input with default fallback
+    
+    Args:
+        start_date_str: Start date string in YYYY-MM-DD format for non-interactive mode (optional)
+        end_date_str: End date string in YYYY-MM-DD format for non-interactive mode (optional)
     
     Returns:
         Tuple of (start_date, end_date) as date objects
     """
+    # Check if we're in non-interactive mode and have dates
+    if non_interactive or os.environ.get('NON_INTERACTIVE') == '1':
+        if start_date_str and end_date_str:
+            try:
+                start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+                end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+                print_info(f"🤖 [NON-INTERACTIVE] Using date range: {start_date} to {end_date}")
+                # Validate date range
+                if start_date > end_date:
+                    print_warning("⚠ Start date is after end date, swapping them")
+                    start_date, end_date = end_date, start_date
+                return start_date, end_date
+            except ValueError as e:
+                print_warning(f"⚠ Invalid date format in command line args: {e}")
+                # Fall back to interactive mode
     print(f"\n{Colors.BOLD}{Colors.BLUE}📅 Date Range Configuration{Colors.RESET}")
     print(f"{Colors.GRAY}{'─'*50}{Colors.RESET}")
     
@@ -216,16 +253,21 @@ def get_date_range_input() -> tuple[date, date]:
         return default_start_date, default_end_date
 
 
-def get_limit_input(default_limit: int = 50) -> int:
+def get_limit_input(default_limit: int = 50, custom_limit: int = None) -> int:
     """
     Get record limit from user input with default fallback
     
     Args:
         default_limit: Default limit to use if user just presses Enter
+        custom_limit: Custom limit to use in non-interactive mode (optional)
         
     Returns:
         User's chosen limit or default if no input provided
     """
+    # Check if we're in non-interactive mode and have a custom limit
+    if custom_limit is not None:
+        print_info(f"🤖 [NON-INTERACTIVE] Using custom limit: {custom_limit} records")
+        return custom_limit
     print(f"\n{Colors.BOLD}{Colors.BLUE}🔢 Record Limit Configuration{Colors.RESET}")
     print(f"{Colors.GRAY}{'─'*50}{Colors.RESET}")
     print_data("Default limit", f"{default_limit} records", 1)
