@@ -27,7 +27,7 @@ from data_utils import (
 # Constants - default values (will be overridden by environment variables)
 SAMPLE_RECORDS_DISPLAY = 2  # Number of sample records to show
 MAX_USER_IDS_DISPLAY = 5    # Maximum number of user IDs to display
-DEFAULT_BATCH_SIZE = 50     # Default batch size for datapoint uploads
+DEFAULT_BATCH_SIZE = 500     # Default batch size for datapoint uploads
 
 # Global variable for non-interactive mode
 NON_INTERACTIVE_MODE = False

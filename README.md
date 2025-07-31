@@ -53,6 +53,29 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## Quarterly Data Extraction Script
+
+A new script `run_quarterly_data_extraction.sh` has been created to automatically process FAEN data for all quarters from 2022-01-01 to 2024-12-31. This script:
+
+- Processes data in quarterly chunks (12 quarters total)
+- Uses non-interactive mode to avoid prompts
+- Calls main.py with appropriate date ranges and dataset type
+- Automatically handles authentication and data retrieval
+
+### Usage
+
+1. Ensure your `.env` file is properly configured with FAEN and CDE credentials
+2. Make the script executable (if not already):
+   ```bash
+   chmod +x run_quarterly_data_extraction.sh
+   ```
+3. Run the script:
+   ```bash
+   ./run_quarterly_data_extraction.sh
+   ```
+
+The script will process each quarter sequentially and save dataset definitions and upload data to CDE for each quarter.
+
 3. Configure environment (steps 2-4 above)
 
 ### Option 2: Using environment variables
