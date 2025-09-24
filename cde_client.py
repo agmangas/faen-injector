@@ -3,10 +3,13 @@
 CDE API Client for health checks, dataset upload, and datapoint management
 """
 
-import requests
-from typing import Dict, List, Optional, Any
-from urllib.parse import urljoin
+import csv
+from io import StringIO
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+from urllib.parse import urljoin
+
+import requests
 
 from console_utils import print_info, print_success, print_error, print_data, print_warning
 
@@ -196,46 +199,107 @@ class CDEApiClient:
             print_error(f"✗ Failed to add datapoint: {e}")
             return False
     
-    def add_datapoints_batch(self, datapoints: List[Dict[str, Any]], batch_size: int = 100) -> Dict[str, int]:
+    def add_datapoints_batch(self, datapoints: List[Dict[str, Any]], batch_size: int = 1000) -> Dict[str, int]:
         """
-        Add multiple datapoints in batches
-        
+        Add multiple datapoints in batches using the CSV upload endpoint.
+
         Args:
             datapoints: List of datapoint dictionaries
-            batch_size: Number of datapoints to send per batch
-            
+            batch_size: Number of datapoints to include per CSV upload
+
         Returns:
             Dictionary with success/failure counts
         """
-        print_info(f"Adding {len(datapoints)} datapoints in batches of {batch_size}")
-        
+        if not datapoints:
+            return {"success": 0, "failed": 0, "total": 0}
+
+        upload_url = urljoin(self.base_url + '/', 'api/timeseries/csv')
+        print_info(f"Uploading {len(datapoints)} datapoints in CSV batches of {batch_size}")
+
         total_success = 0
         total_failed = 0
-        
-        # Process datapoints in batches
-        for i in range(0, len(datapoints), batch_size):
-            batch = datapoints[i:i + batch_size]
-            batch_num = (i // batch_size) + 1
-            total_batches = (len(datapoints) + batch_size - 1) // batch_size
-            
-            print_info(f"Processing batch {batch_num}/{total_batches} ({len(batch)} datapoints)")
-            
-            batch_success = 0
+
+        total_batches = (len(datapoints) + batch_size - 1) // batch_size
+
+        for batch_index in range(total_batches):
+            start = batch_index * batch_size
+            end = start + batch_size
+            batch = datapoints[start:end]
+
+            print_info(
+                f"Processing batch {batch_index + 1}/{total_batches} ({len(batch)} datapoints)"
+            )
+
+            csv_buffer = StringIO()
+            writer = csv.writer(csv_buffer)
+            writer.writerow(["measurement", "timestamp", "value", "unit", "timeseries"])
+
+            missing_fields = 0
+            rows_written = 0
             for datapoint in batch:
-                if self.add_datapoint(**datapoint):
-                    batch_success += 1
-                else:
-                    total_failed += 1
-            
-            total_success += batch_success
-            print_data("Batch success", f"{batch_success}/{len(batch)}", 1)
-        
-        print_success(f"✓ Successfully added {total_success} datapoints")
-        if total_failed > 0:
-            print_error(f"✗ Failed to add {total_failed} datapoints")
-        
-        return {
-            "success": total_success,
-            "failed": total_failed,
-            "total": len(datapoints)
-        }
+                measurement = datapoint.get("measurement")
+                timestamp = datapoint.get("timestamp")
+                value = datapoint.get("value")
+                unit = datapoint.get("unit")
+                timeseries_id = (
+                    datapoint.get("timeseries")
+                    or datapoint.get("timeseries_id")
+                    or datapoint.get("timeseriesId")
+                )
+
+                if None in (measurement, timestamp, value, unit, timeseries_id):
+                    missing_fields += 1
+                    continue
+
+                writer.writerow([
+                    measurement,
+                    timestamp,
+                    value,
+                    unit,
+                    timeseries_id,
+                ])
+                rows_written += 1
+
+            if missing_fields:
+                print_warning(
+                    f"⚠ Skipped {missing_fields} datapoints in batch due to missing fields"
+                )
+                total_failed += missing_fields
+
+            csv_content = csv_buffer.getvalue().encode("utf-8")
+            files = {
+                "file": (
+                    f"datapoints_batch_{batch_index + 1}.csv",
+                    csv_content,
+                    "text/csv",
+                )
+            }
+
+            try:
+                response = self.session.post(
+                    upload_url,
+                    files=files,
+                    timeout=60,
+                )
+            except requests.exceptions.RequestException as error:
+                print_error(f"✗ CSV upload failed for batch {batch_index + 1}: {error}")
+                total_failed += rows_written
+                continue
+
+            if response.status_code in (200, 201):
+                batch_success = rows_written
+                total_success += batch_success
+                print_data("Batch status", f"Uploaded {batch_success} datapoints", 1)
+            else:
+                total_failed += rows_written
+                print_error(
+                    f"✗ Batch {batch_index + 1} failed with status {response.status_code}"
+                )
+                print_data("Response content", response.text[:500], 1)
+
+        if total_success:
+            print_success(f"✓ Successfully added {total_success} datapoints via CSV")
+        if total_failed:
+            print_error(f"✗ Failed to add {total_failed} datapoints via CSV")
+
+        return {"success": total_success, "failed": total_failed, "total": len(datapoints)}

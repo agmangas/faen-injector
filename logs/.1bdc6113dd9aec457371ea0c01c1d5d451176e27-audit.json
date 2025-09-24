@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/michaelvassiliadis/Development/datacellar/faen-injector/logs/.1bdc6113dd9aec457371ea0c01c1d5d451176e27-audit.json",
+    "files": [
+        {
+            "date": 1753962946919,
+            "name": "/Users/michaelvassiliadis/Development/datacellar/faen-injector/logs/mcp-puppeteer-2025-07-31.log",
+            "hash": "3c7219387757d8ea69e6f0a5ef8a71dceedf331358df0d061e157356287a05d9"
+        }
+    ],
+    "hashType": "sha256"
+}

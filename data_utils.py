@@ -349,7 +349,7 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
             "datacellar:startDate": timeseries_start,
             "datacellar:endDate": timeseries_end,
             "datacellar:timeZone": "0",
-            "datacellar:granularity": "Hourly",
+            "datacellar:granularity": 3600.0,
             "datacellar:dataPoints": [],
             "datacellar:timeSeriesMetadata": {
                 "@type": "datacellar:PVPanel",
@@ -366,7 +366,7 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
         "datacellar:startDate": timeseries_start,
         "datacellar:endDate": timeseries_end,
         "datacellar:timeZone": "0",
-        "datacellar:granularity": "Hourly",
+        "datacellar:granularity": 3600.0,
         "datacellar:dataPoints": [],
         "datacellar:timeSeriesMetadata": {
             "@type": "datacellar:PVPanel",
@@ -383,7 +383,7 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
         "datacellar:startDate": timeseries_start,
         "datacellar:endDate": timeseries_end,
         "datacellar:timeZone": "0",
-        "datacellar:granularity": "Hourly",
+        "datacellar:granularity": 3600.0,
         "datacellar:dataPoints": [],
         "datacellar:timeSeriesMetadata": {
             "@type": "datacellar:PVPanel",
@@ -392,7 +392,7 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
         }
     }
     timeseries_entries.append(humidity_timeseries)
-    
+
     # Dataset definition with 3 field types
     dataset_definition = {
         "@context": {
@@ -416,7 +416,8 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
             "datacellar:tilt": {"@type": "xsd:float"},
             "datacellar:timestamp": {"@type": "xsd:dateTime"},
             "datacellar:totalAnnualEnergyConsumption": {"@type": "xsd:float"},
-            "datacellar:value": {"@type": "xsd:float"}
+            "datacellar:value": {"@type": "xsd:float"},
+            "datacellar:granularity": {"@type": "xsd:float"}
         },
         "@type": "datacellar:Dataset",
         "datacellar:name": title,
@@ -669,7 +670,7 @@ def generate_dataset_definition(start_date: Union[date, datetime], end_date: Uni
             "datacellar:startDate": timeseries_start,
             "datacellar:endDate": timeseries_end,
             "datacellar:timeZone": "0",
-            "datacellar:granularity": "Hourly",
+            "datacellar:granularity": 3600.0,
             "datacellar:dataPoints": [],
             "datacellar:timeSeriesMetadata": {
                 "@type": "datacellar:EnergyMeter",
@@ -702,7 +703,8 @@ def generate_dataset_definition(start_date: Union[date, datetime], end_date: Uni
             "datacellar:tilt": {"@type": "xsd:float"},
             "datacellar:timestamp": {"@type": "xsd:dateTime"},
             "datacellar:totalAnnualEnergyConsumption": {"@type": "xsd:float"},
-            "datacellar:value": {"@type": "xsd:float"}
+            "datacellar:value": {"@type": "xsd:float"},
+            "datacellar:granularity": {"@type": "xsd:float"}
         },
         "@type": "datacellar:Dataset",
         "datacellar:name": title,

@@ -7,7 +7,7 @@ set -e  # Exit on any error
 
 # Parse command line arguments
 DRY_RUN=false
-DATASET_TYPE=1  # Default dataset type is 1 (consumption only)
+DATASET_TYPE=3  # Default dataset type is 1 (consumption only)
 while [[ $# -gt 0 ]]; do
     case $1 in
         --dry-run)
