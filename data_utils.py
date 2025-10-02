@@ -4,6 +4,7 @@ Data transformation utilities for dataset generation and format conversion
 """
 
 import json
+import uuid
 from datetime import datetime, date
 from typing import Dict, List, Any, Union
 from pathlib import Path
@@ -340,11 +341,16 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
     
     # Create timeseries entries - 3 timeseries total
     timeseries_entries = []
-    
+    timeseries_guid = ""
+
     # 1. Generation timeseries (one per user)
     for user_id in generation_user_ids:
+        timeseries_guid = f"{uuid.uuid4()}"
+
         generation_timeseries = {
             "@type": "datacellar:TimeSeries",
+            "@id": f"http://datacellar.org/timeseries/{timeseries_guid}",
+            "datacellar:timeSeriesId": timeseries_guid,
             "datacellar:datasetFieldID": 1,  # Generation field ID
             "datacellar:startDate": timeseries_start,
             "datacellar:endDate": timeseries_end,
@@ -360,8 +366,12 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
         timeseries_entries.append(generation_timeseries)
     
     # 2. Temperature timeseries (single weather station)
+    timeseries_guid = f"{uuid.uuid4()}"
+
     temperature_timeseries = {
         "@type": "datacellar:TimeSeries",
+        "@id": f"http://datacellar.org/timeseries/{timeseries_guid}",
+        "datacellar:timeSeriesId": timeseries_guid,
         "datacellar:datasetFieldID": 2,  # Temperature field ID
         "datacellar:startDate": timeseries_start,
         "datacellar:endDate": timeseries_end,
@@ -377,8 +387,11 @@ def generate_combined_dataset_definition(start_date: Union[date, datetime], end_
     timeseries_entries.append(temperature_timeseries)
     
     # 3. Humidity timeseries (single weather station)  
+    timeseries_guid = f"{uuid.uuid4()}"
     humidity_timeseries = {
         "@type": "datacellar:TimeSeries",
+        "@id": f"http://datacellar.org/timeseries/{timeseries_guid}",
+        "datacellar:timeSeriesId": timeseries_guid,
         "datacellar:datasetFieldID": 3,  # Humidity field ID
         "datacellar:startDate": timeseries_start,
         "datacellar:endDate": timeseries_end,
@@ -664,8 +677,12 @@ def generate_dataset_definition(start_date: Union[date, datetime], end_date: Uni
     # Create timeseries entries for each user
     timeseries_entries = []
     for idx, user_id in enumerate(unique_user_ids, 1):
+        timeseries_guid = f"{uuid.uuid4()}"
+
         timeseries_entry = {
             "@type": "datacellar:TimeSeries",
+            "@id": f"http://datacellar.org/timeseries/{timeseries_guid}",
+            "datacellar:timeSeriesId": timeseries_guid,
             "datacellar:datasetFieldID": 1,
             "datacellar:startDate": timeseries_start,
             "datacellar:endDate": timeseries_end,
