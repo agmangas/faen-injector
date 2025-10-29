@@ -21,7 +21,8 @@ from cde_client import CDEApiClient
 from data_utils import (
     generate_dataset_definition, save_dataset_definition,
     transform_faen_to_datapoints, generate_combined_dataset_definition,
-    transform_generation_to_datapoints, transform_weather_to_datapoints
+    transform_generation_to_datapoints, transform_weather_to_datapoints,
+    generate_mrae_dataset_definition, transform_mrae_to_datapoints
 )
 
 # Constants - default values (will be overridden by environment variables)
@@ -70,8 +71,14 @@ Examples:
   # Non-interactive mode - generation + weather data
   python main.py --dataset-type 2 --start-date 2025-05-01 --end-date 2025-05-02
   
-  # Non-interactive mode - both dataset types
+  # Non-interactive mode - both consumption and generation
   python main.py --dataset-type 3 --start-date 2025-05-01 --end-date 2025-05-02
+  
+  # Non-interactive mode - MRAE charging data only
+  python main.py --dataset-type 4 --start-date 2020-01-01 --end-date 2023-12-31
+  
+  # Non-interactive mode - all dataset types
+  python main.py --dataset-type 5 --start-date 2025-05-01 --end-date 2025-05-02
   
   # With custom record limit
   python main.py --dataset-type 1 --start-date 2025-05-01 --end-date 2025-05-02 --limit 100
@@ -81,8 +88,8 @@ Examples:
     parser.add_argument(
         '--dataset-type', 
         type=int, 
-        choices=[1, 2, 3],
-        help='Dataset type: 1=Building Consumption, 2=Photovoltaic Generation, 3=Both types'
+        choices=[1, 2, 3, 4, 5],
+        help='Dataset type: 1=Building Consumption, 2=Photovoltaic Generation, 3=Both, 4=MRAE Charging, 5=All types'
     )
     
     parser.add_argument(
@@ -107,6 +114,13 @@ Examples:
         '--non-interactive', 
         action='store_true',
         help='Run in non-interactive mode (auto-confirm all prompts)'
+    )
+    
+    parser.add_argument(
+        '--location',
+        type=str,
+        default='MRA-E',
+        help='Location filter for MRAE data (default: MRA-E)'
     )
     
     args = parser.parse_args()
@@ -229,30 +243,42 @@ Examples:
                 # Non-interactive mode: use command line argument
                 choice = str(args.dataset_type)
                 print_info(f"🤖 [NON-INTERACTIVE] Using dataset type from command line: {choice}")
-                create_consumption = choice in ['1', '3']
-                create_generation = choice in ['2', '3']
+                create_consumption = choice in ['1', '3', '5']
+                create_generation = choice in ['2', '3', '5']
+                create_mrae = choice in ['4', '5']
             else:
                 # Interactive mode: ask user
                 print_section("📊 Dataset Type Selection")
                 print_info("Available dataset types:")
                 print_data("1", "Building Consumption (energy consumption data)", 1)
                 print_data("2", "Photovoltaic Generation (generation + weather data)", 1)
-                print_data("3", "Both types (creates separate datasets)", 1)
+                print_data("3", "Both Consumption and Generation", 1)
+                print_data("4", "MRAE Charging Infrastructure (EV charging data)", 1)
+                print_data("5", "All types (creates separate datasets)", 1)
                 
                 while True:
                     try:
-                        choice = input("\nSelect dataset type (1-3): ").strip()
-                        if choice in ['1', '2', '3']:
+                        choice = input("\nSelect dataset type (1-5): ").strip()
+                        if choice in ['1', '2', '3', '4', '5']:
                             break
-                        print_warning("Please enter 1, 2, or 3")
+                        print_warning("Please enter 1, 2, 3, 4, or 5")
                     except (EOFError, KeyboardInterrupt):
                         print_info("\n❌ Operation cancelled by user")
                         return
                 
-                create_consumption = choice in ['1', '3']
-                create_generation = choice in ['2', '3']
+                create_consumption = choice in ['1', '3', '5']
+                create_generation = choice in ['2', '3', '5']
+                create_mrae = choice in ['4', '5']
             
-            print_info(f"Selected: {'Consumption' if create_consumption else ''}{'Both' if create_consumption and create_generation else ''}{'Generation + Weather' if create_generation and not create_consumption else ''}")
+            # Build selection description
+            selected_types = []
+            if create_consumption:
+                selected_types.append("Consumption")
+            if create_generation:
+                selected_types.append("Generation + Weather")
+            if create_mrae:
+                selected_types.append("MRAE Charging")
+            print_info(f"Selected: {', '.join(selected_types)}")
             
             # Get user input for date range and limit
             start_date, end_date = get_date_range_input(args.start_date, args.end_date, NON_INTERACTIVE_MODE)
@@ -281,6 +307,7 @@ Examples:
             consumption_data = []
             generation_data = []
             weather_data = []
+            mrae_data = []
             
             # Query data based on selection
             if create_consumption:
@@ -310,14 +337,28 @@ Examples:
                 )
                 print_data("Weather records", str(len(weather_data)), 1)
             
+            if create_mrae:
+                print_section("🔌 Querying MRAE Charging Data")
+                location = args.location if hasattr(args, 'location') else 'MRA-E'
+                print_data("Location filter", location, 1)
+                mrae_data = faen_client.query_mrae(
+                    start_date=start_date.isoformat(),
+                    end_date=end_date.isoformat(),
+                    location=location,
+                    limit=limit
+                )
+                print_data("MRAE records", str(len(mrae_data)), 1)
+            
             print_section("📋 FAEN Results Summary")
-            total_records = len(consumption_data) + len(generation_data) + len(weather_data)
+            total_records = len(consumption_data) + len(generation_data) + len(weather_data) + len(mrae_data)
             print_data("Total records retrieved", str(total_records), 1)
             if create_consumption:
                 print_data("Consumption records", str(len(consumption_data)), 1)
             if create_generation:
                 print_data("Generation records", str(len(generation_data)), 1)
                 print_data("Weather records", str(len(weather_data)), 1)
+            if create_mrae:
+                print_data("MRAE records", str(len(mrae_data)), 1)
             
             # Confirmation point 2: After data retrieval
             if not confirm_proceed(
@@ -328,7 +369,7 @@ Examples:
                 return
             
             # Print first few records
-            if consumption_data or generation_data or weather_data:
+            if consumption_data or generation_data or weather_data or mrae_data:
                 print_section("📊 Sample FAEN Data")
                 
                 # Show consumption data samples
@@ -382,6 +423,23 @@ Examples:
                             f"{Colors.RESET}"
                         )
                 
+                # Show MRAE data samples
+                if mrae_data:
+                    print_info("MRAE Charging Data Sample:")
+                    for i, record in enumerate(mrae_data[:SAMPLE_RECORDS_DISPLAY]):
+                        print(
+                            f"\n{Colors.BOLD}{Colors.MAGENTA}  MRAE Record {i+1}:"
+                            f"{Colors.RESET}"
+                        )
+                        print_json_preview(record)
+                    
+                    if len(mrae_data) > SAMPLE_RECORDS_DISPLAY:
+                        remaining = len(mrae_data) - SAMPLE_RECORDS_DISPLAY
+                        print(
+                            f"\n{Colors.GRAY}  ... and {remaining} more MRAE records"
+                            f"{Colors.RESET}"
+                        )
+                
                 # Generate dataset definitions based on selection
                 datasets_to_process = []
                 
@@ -427,6 +485,30 @@ Examples:
                     print_warning("⚠ Cannot create generation dataset - insufficient data")
                     print_data("Generation records", str(len(generation_data)), 1)
                     print_data("Weather records", str(len(weather_data)), 1)
+                
+                if create_mrae and mrae_data:
+                    print_section("📋 MRAE Charging Dataset Generation")
+                    print_info("Generating MRAE charging infrastructure dataset definition...")
+                    
+                    location = args.location if hasattr(args, 'location') else 'MRA-E'
+                    mrae_dataset = generate_mrae_dataset_definition(
+                        start_date, end_date, mrae_data, location=location
+                    )
+                    datasets_to_process.append({
+                        'definition': mrae_dataset,
+                        'type': 'mrae',
+                        'data': mrae_data,
+                        'name': 'MRAE Charging Infrastructure Dataset'
+                    })
+                    
+                    print_success("✓ MRAE dataset definition generated")
+                    print_data("Dataset name", mrae_dataset.get('datacellar:name', 'Unknown'), 1)
+                    timeseries_list = mrae_dataset.get('datacellar:timeSeries', [])
+                    print_data("Number of timeseries", str(len(timeseries_list)), 1)
+                
+                elif create_mrae and not mrae_data:
+                    print_warning("⚠ Cannot create MRAE dataset - no data available")
+                    print_data("MRAE records", str(len(mrae_data)), 1)
                 
                 if not datasets_to_process:
                     print_error("❌ No datasets can be generated with available data")
@@ -644,6 +726,57 @@ Examples:
                         else:
                             datapoints = []
                     
+                    elif dataset_type == 'mrae':
+                        # Create mapping for MRAE fields using datasetField information from CDE
+                        timeseries_mapping = {}
+                        
+                        # Field ID to field name mapping for MRAE
+                        field_map = {
+                            1: 'totalEnergy',
+                            2: 'connectionTime',
+                            3: 'electricKilometers',
+                            4: 'co2Reduction',
+                            5: 'chargingSessions',
+                            6: 'chargingPoles'
+                        }
+                        
+                        for ts in timeseries_list:
+                            dataset_field = ts.get('datasetField', {})
+                            field_id = dataset_field.get('datacellar:datasetFieldID')
+                            field_name = dataset_field.get('datacellar:name')
+                            ts_id = ts.get('id')
+                            
+                            print_info(f"Processing MRAE timeseries {ts_id}:")
+                            print_data("Field ID", str(field_id), 2)
+                            print_data("Field Name", str(field_name), 2)
+                            
+                            if not field_id or not ts_id:
+                                print_warning(f"⚠ Missing field ID or timeseries ID for {ts_id}")
+                                continue
+                            
+                            # Map by field ID
+                            if field_id in field_map:
+                                timeseries_mapping[field_map[field_id]] = ts_id
+                                print_data("Mapped to", f"{field_map[field_id]} → {ts_id}", 2)
+                            else:
+                                print_warning(f"⚠ Unknown field ID: {field_id}")
+                        
+                        print_info(f"Final MRAE timeseries mapping: {timeseries_mapping}")
+                        
+                        # Validate we have all required mappings
+                        expected_fields = list(field_map.values())
+                        missing_fields = [f for f in expected_fields if f not in timeseries_mapping]
+                        if missing_fields:
+                            print_warning(f"⚠ Missing mappings for: {', '.join(missing_fields)}")
+                        
+                        if timeseries_mapping:
+                            datapoints = transform_mrae_to_datapoints(
+                                dataset_info['data'], timeseries_mapping
+                            )
+                        else:
+                            datapoints = []
+                            print_error("✗ No valid timeseries mappings found for MRAE data")
+                    
                     if datapoints:
                         # Upload datapoints in batches
                         batch_result = cde_client.add_datapoints_batch(
@@ -674,6 +807,8 @@ Examples:
                 if create_generation:
                     print_success(f"  • {len(generation_data)} generation records")
                     print_success(f"  • {len(weather_data)} weather records")
+                if create_mrae:
+                    print_success(f"  • {len(mrae_data)} MRAE charging records")
                 
                 # Dataset generation summary
                 if datasets_to_process:

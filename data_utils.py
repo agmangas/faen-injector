@@ -9,7 +9,8 @@ from datetime import datetime, date
 from typing import Dict, List, Any, Union
 from pathlib import Path
 
-from console_utils import print_info, print_success, print_error, print_data, print_warning
+from console_utils import print_info, print_success, print_error, print_data, print_warning, print_section
+from mrae import MRAEDatasetGenerator, MRAEDataTransformer
 
 
 def save_dataset_definition(dataset_definition: Dict[str, Any], start_date: Union[date, datetime], end_date: Union[date, datetime], dataset_type: str = "consumption") -> str:
@@ -515,8 +516,6 @@ def create_combined_dataset_and_datapoints(start_date: Union[date, datetime],
     Returns:
         Tuple of (dataset_definition, all_datapoints)
     """
-    from console_utils import print_section
-    
     print_section("🔧 Creating Combined Dataset")
     
     # Generate dataset definition
@@ -758,3 +757,49 @@ def generate_dataset_definition(start_date: Union[date, datetime], end_date: Uni
     }
     
     return dataset_definition
+
+
+def generate_mrae_dataset_definition(
+    start_date: Union[date, datetime],
+    end_date: Union[date, datetime],
+    mrae_data: List[Dict[str, Any]] = None,
+    location: str = "MRA-E"
+) -> Dict[str, Any]:
+    """
+    Generate dataset definition for MRAE charging infrastructure data
+    
+    Delegates to MRAEDatasetGenerator for implementation.
+    This function provides backward compatibility.
+    
+    Args:
+        start_date: Start date (date or datetime object)
+        end_date: End date (date or datetime object)
+        mrae_data: List of MRAE records (optional, for validation)
+        location: Location identifier (default: "MRA-E")
+        
+    Returns:
+        Dataset definition dictionary in JSON-LD format with 6 fields
+    """
+    return MRAEDatasetGenerator.generate_dataset_definition(
+        start_date, end_date, mrae_data, location
+    )
+
+
+def transform_mrae_to_datapoints(
+    mrae_data: List[Dict[str, Any]],
+    timeseries_mapping: Dict[str, str]
+) -> List[Dict[str, Any]]:
+    """
+    Transform MRAE data into CDE datapoint format
+    
+    Delegates to MRAEDataTransformer for implementation.
+    This function provides backward compatibility.
+    
+    Args:
+        mrae_data: List of MRAE records
+        timeseries_mapping: Dictionary mapping field names to timeseries IDs
+        
+    Returns:
+        List of datapoint dictionaries ready for CDE API
+    """
+    return MRAEDataTransformer.transform_to_datapoints(mrae_data, timeseries_mapping)
