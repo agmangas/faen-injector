@@ -730,14 +730,9 @@ Examples:
                         # Create mapping for MRAE fields using datasetField information from CDE
                         timeseries_mapping = {}
                         
-                        # Field ID to field name mapping for MRAE
+                        # Field ID to field name mapping for MRAE (simplified)
                         field_map = {
-                            1: 'totalEnergy',
-                            2: 'connectionTime',
-                            3: 'electricKilometers',
-                            4: 'co2Reduction',
-                            5: 'chargingSessions',
-                            6: 'chargingPoles'
+                            1: 'consumedEnergy',
                         }
                         
                         for ts in timeseries_list:
