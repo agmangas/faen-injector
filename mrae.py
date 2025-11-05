@@ -166,59 +166,15 @@ class MRAEDatasetGenerator:
     """Generator for MRAE dataset definitions"""
 
     # Field configuration: (id, name, description, unit, averagable, summable, anonymizable)
+    # Simplified to use only allowed field name from CDE measurements.csv
     FIELD_DEFINITIONS = [
         (
             1,
-            "totalEnergy",
+            "consumedEnergy",
             "Total energy consumed by electric vehicle charging in kWh",
             "kWh",
             False,
             True,
-            False,
-        ),
-        (
-            2,
-            "connectionTime",
-            "Total connection time to charging stations in hours",
-            "hours",
-            False,
-            True,
-            False,
-        ),
-        (
-            3,
-            "electricKilometers",
-            "Total electric kilometers driven based on charging sessions",
-            "km",
-            False,
-            True,
-            False,
-        ),
-        (
-            4,
-            "co2Reduction",
-            "Estimated CO2 reduction from electric vehicle usage in tons",
-            "tons",
-            False,
-            True,
-            False,
-        ),
-        (
-            5,
-            "chargingSessions",
-            "Total number of charging sessions",
-            "count",
-            False,
-            True,
-            False,
-        ),
-        (
-            6,
-            "chargingPoles",
-            "Number of active charging poles in the infrastructure",
-            "count",
-            False,
-            False,
             False,
         ),
     ]
@@ -322,7 +278,7 @@ class MRAEDatasetGenerator:
             }
             timeseries_entries.append(timeseries_entry)
 
-        print_info(f"Created {len(timeseries_entries)} timeseries for MRAE dataset")
+        print_info(f"Created {len(timeseries_entries)} timeseries for MRAE dataset (consumedEnergy only)")
 
         # Dataset definition with 6 field types
         dataset_definition = {
@@ -373,15 +329,7 @@ class MRAEDatasetGenerator:
                     for field_id, field_name, field_desc, unit, averagable, summable, anonymizable in MRAEDatasetGenerator.FIELD_DEFINITIONS
                 ],
             },
-            "datacellar:timeSeries": timeseries_entries,
-            "datacellar:datasetMetadata": [
-                {
-                    "@type": "datacellar:Installation",
-                    "datacellar:installationType": "evChargingInfrastructure",
-                    "datacellar:installedCapacity": 50.0,
-                    "datacellar:installedCapacityUnit": "kW",
-                }
-            ],
+            "datacellar:timeSeries": timeseries_entries
         }
 
         return dataset_definition
@@ -391,13 +339,9 @@ class MRAEDataTransformer:
     """Transformer for converting MRAE data to CDE datapoint format"""
 
     # Field mapping: MRAE API field -> (CDE field name, measurement name, unit)
+    # Simplified to map only energy consumption to allowed CDE field name
     FIELD_MAPPINGS = {
-        "total_kwh": ("totalEnergy", "totalEnergy", "kWh"),
-        "total_connection_time": ("connectionTime", "connectionTime", "hours"),
-        "total_electric_kilometers": ("electricKilometers", "electricKilometers", "km"),
-        "co2_reduction": ("co2Reduction", "co2Reduction", "tons"),
-        "total_sessions": ("chargingSessions", "chargingSessions", "count"),
-        "charging_poles": ("chargingPoles", "chargingPoles", "count"),
+        "total_kwh": ("consumedEnergy", "consumedEnergy", "kWh"),
     }
 
     @staticmethod
