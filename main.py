@@ -647,7 +647,11 @@ Examples:
                     if datapoints:
                         # Upload datapoints in batches
                         batch_result = cde_client.add_datapoints_batch(
-                            datapoints, batch_size=DEFAULT_BATCH_SIZE
+                            datapoints,
+                            batch_size=DEFAULT_BATCH_SIZE,
+                            dataset_name=dataset_name,
+                            start_date=str(start_date),
+                            end_date=str(end_date)
                         )
                         
                         print_info(f"Datapoint upload results for {dataset_type}:")

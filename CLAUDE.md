@@ -93,6 +93,12 @@ python test_dotenv_behavior.py
   - PVPanel metadata with latitude/longitude coordinates from weather data
   - Field-based mapping using `datasetField` information from CDE API
 - **Datapoints**: Individual measurements with timestamps and values embedded in timeseries
+  - Complete CSV files (one per timeseries/measurement type) saved to `datasets/csv/` folder
+  - Filename format: `{dataset_name}_{measurement_type}_{start_date}_to_{end_date}.csv`
+  - Example: `FAEN_Consumption_May_2025_consumedEnergy_2025-05-01_to_2025-06-01.csv`
+  - CSV files contain all datapoints for a single measurement type across entire time range
+  - Uploads still happen in configurable batches for efficiency
+  - CSV files are automatically gitignored via the `datasets/` pattern
 - **Health Checks**: CDE API health endpoint for connectivity verification
 
 ## CLI Features
