@@ -63,7 +63,7 @@ def save_dataset_definition(
         with open(file_path, "w", encoding="utf-8") as file:
             json.dump(dataset_definition, file, indent=2, ensure_ascii=False)
 
-        print_success(f"Dataset definition saved successfully")
+        print_success("✓ Dataset definition saved successfully")
         print_data("File path", str(file_path), 1)
         print_data("File size", f"{file_path.stat().st_size:,} bytes", 1)
 
@@ -430,8 +430,8 @@ def generate_combined_dataset_definition(
             "datacellar:latitude": latitude,
             "datacellar:longitude": longitude,
             "datacellar:timeSeriesMetadata": {
-                "@type": "datacellar:PVPanel",
-            },
+                "@type": "datacellar:PVPanel"
+            }
         }
         timeseries_entries.append(generation_timeseries)
 
@@ -448,11 +448,11 @@ def generate_combined_dataset_definition(
         "datacellar:timeZone": "0",
         "datacellar:granularity": 3600.0,
         "datacellar:dataPoints": [],
-        "datacellar:latitude": latitude,
         "datacellar:longitude": longitude,
+        "datacellar:latitude": latitude,
         "datacellar:timeSeriesMetadata": {
-            "@type": "datacellar:PVPanel",
-        },
+            "@type": "datacellar:PVPanel"
+        }
     }
     timeseries_entries.append(temperature_timeseries)
 
@@ -468,11 +468,11 @@ def generate_combined_dataset_definition(
         "datacellar:timeZone": "0",
         "datacellar:granularity": 3600.0,
         "datacellar:dataPoints": [],
-        "datacellar:latitude": latitude,
         "datacellar:longitude": longitude,
+        "datacellar:latitude": latitude,
         "datacellar:timeSeriesMetadata": {
-            "@type": "datacellar:PVPanel",
-        },
+            "@type": "datacellar:PVPanel"
+        }
     }
     timeseries_entries.append(humidity_timeseries)
 

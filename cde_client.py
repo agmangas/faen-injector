@@ -266,13 +266,18 @@ class CDEApiClient:
             print_error(f"✗ Failed to add datapoint: {e}")
             return False
     
-    def add_datapoints_batch(self, datapoints: List[Dict[str, Any]], batch_size: int = 1000) -> Dict[str, int]:
+    def add_datapoints_batch(self, datapoints: List[Dict[str, Any]], batch_size: int = 1000,
+                            dataset_name: str = "unknown", start_date: str = None, end_date: str = None) -> Dict[str, int]:
         """
         Add multiple datapoints in batches using the CSV upload endpoint.
+        Saves complete CSV files per timeseries (one file per measurement type) before uploading in batches.
 
         Args:
             datapoints: List of datapoint dictionaries
-            batch_size: Number of datapoints to include per CSV upload
+            batch_size: Number of datapoints to include per CSV upload batch
+            dataset_name: Name of the dataset for CSV file naming
+            start_date: Start date string for filename (e.g., "2025-05-01")
+            end_date: End date string for filename (e.g., "2025-05-02")
 
         Returns:
             Dictionary with success/failure counts
@@ -283,6 +288,70 @@ class CDEApiClient:
         upload_url = urljoin(self.base_url + '/', 'api/timeseries/csv')
         print_info(f"Uploading {len(datapoints)} datapoints in CSV batches of {batch_size}")
 
+        # Create CSV directory inside datasets folder
+        script_dir = Path(__file__).parent
+        datasets_dir = script_dir / "datasets"
+        csv_dir = datasets_dir / "csv"
+        csv_dir.mkdir(parents=True, exist_ok=True)
+
+        print_info(f"Saving CSV files to: {csv_dir}")
+
+        # Group datapoints by measurement type (timeseries)
+        datapoints_by_measurement = {}
+        for datapoint in datapoints:
+            measurement = datapoint.get("measurement")
+            if measurement:
+                if measurement not in datapoints_by_measurement:
+                    datapoints_by_measurement[measurement] = []
+                datapoints_by_measurement[measurement].append(datapoint)
+
+        # Save one CSV file per measurement type (timeseries)
+        for measurement_type, measurement_datapoints in datapoints_by_measurement.items():
+            csv_buffer = StringIO()
+            writer = csv.writer(csv_buffer)
+            writer.writerow(["measurement", "timestamp", "value", "unit", "timeseries"])
+
+            for datapoint in measurement_datapoints:
+                measurement = datapoint.get("measurement")
+                timestamp = datapoint.get("timestamp")
+                value = datapoint.get("value")
+                unit = datapoint.get("unit")
+                timeseries_id = (
+                    datapoint.get("timeseries")
+                    or datapoint.get("timeseries_id")
+                    or datapoint.get("timeseriesId")
+                )
+
+                if None not in (measurement, timestamp, value, unit, timeseries_id):
+                    writer.writerow([
+                        measurement,
+                        timestamp,
+                        value,
+                        unit,
+                        timeseries_id,
+                    ])
+
+            csv_content = csv_buffer.getvalue()
+
+            # Create filename with dataset name, measurement type, and date range
+            date_range = ""
+            if start_date and end_date:
+                date_range = f"_{start_date}_to_{end_date}"
+
+            # Sanitize dataset name for filename
+            safe_dataset_name = dataset_name.replace(" ", "_").replace("/", "_")
+            csv_filename = f"{safe_dataset_name}_{measurement_type}{date_range}.csv"
+            csv_file_path = csv_dir / csv_filename
+
+            try:
+                with open(csv_file_path, 'w', encoding='utf-8') as f:
+                    f.write(csv_content)
+                print_success(f"✓ Saved complete timeseries CSV to: {csv_filename}")
+                print_data("Datapoints in file", str(len(measurement_datapoints)), 2)
+            except Exception as e:
+                print_error(f"✗ Failed to save CSV file: {e}")
+
+        # Now upload in batches (existing logic)
         total_success = 0
         total_failed = 0
 
@@ -294,7 +363,7 @@ class CDEApiClient:
             batch = datapoints[start:end]
 
             print_info(
-                f"Processing batch {batch_index + 1}/{total_batches} ({len(batch)} datapoints)"
+                f"Uploading batch {batch_index + 1}/{total_batches} ({len(batch)} datapoints)"
             )
 
             csv_buffer = StringIO()
@@ -333,11 +402,12 @@ class CDEApiClient:
                 )
                 total_failed += missing_fields
 
-            csv_content = csv_buffer.getvalue().encode("utf-8")
+            csv_content_bytes = csv_buffer.getvalue().encode("utf-8")
+
             files = {
                 "file": (
                     f"datapoints_batch_{batch_index + 1}.csv",
-                    csv_content,
+                    csv_content_bytes,
                     "text/csv",
                 )
             }
