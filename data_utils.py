@@ -798,6 +798,8 @@ def generate_dataset_definition(
             "datacellar:timeZone": "0",
             "datacellar:granularity": 3600.0,
             "datacellar:dataPoints": [],
+            "datacellar:latitude": BIMENES_LATITUDE,
+            "datacellar:longitude": BIMENES_LONGITUDE,
             "datacellar:timeSeriesMetadata": {
                 "@type": "datacellar:EnergyMeter",
                 "datacellar:deviceID": user_id,
