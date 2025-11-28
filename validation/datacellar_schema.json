@@ -12,7 +12,6 @@
       "rdfs:comment": "A collection of data, particularly focused on PV power production metrics and environmental data.",
       "rdfs:label": "Dataset"
     },
-
     {
       "@id": "datacellar:name",
       "@type": "rdf:Property",
@@ -29,7 +28,6 @@
       "rdfs:domain": "datacellar:Dataset",
       "rdfs:range": "xsd:string"
     },
-
     {
       "@id": "datacellar:datasetSelfDescription",
       "@type": "rdf:Property",
@@ -41,7 +39,6 @@
         "@container": "@set"
       }
     },
-
     {
       "@id": "datacellar:timeSeriesList",
       "@type": "rdf:Property",
@@ -53,7 +50,6 @@
         "@container": "@set"
       }
     },
-
     {
       "@id": "datacellar:datasetMetadataList",
       "@type": "rdf:Property",
@@ -65,7 +61,6 @@
         "@container": "@list"
       }
     },
-
     {
       "@id": "datacellar:GeoLocalizedDataset",
       "@type": "rdfs:Class",
@@ -104,7 +99,6 @@
       "rdfs:domain": "datacellar:GeoLocalizedDataset",
       "rdfs:range": "xsd:string"
     },
-
     {
       "@id": "datacellar:BuildingDataset",
       "@type": "rdfs:Class",
@@ -263,7 +257,6 @@
       "rdfs:domain": "datacellar:BuildingDataset",
       "rdfs:range": "xsd:string"
     },
-
     {
       "@id": "datacellar:occupantsList",
       "@type": "rdf:Property",
@@ -373,14 +366,12 @@
       "rdfs:domain": "datacellar:LECDataset",
       "rdfs:range": "xsd:integer"
     },
-
     {
       "@id": "datacellar:TimeSeries",
       "@type": "rdfs:Class",
       "rdfs:comment": "A series of data points collected over time, associated with a specific dataset and field, including details about the timing and granularity of data collection.",
       "rdfs:label": "TimeSeries"
     },
-
     {
       "@id": "datacellar:datasetFieldID",
       "@type": "rdf:Property",
@@ -456,14 +447,12 @@
       "rdfs:domain": "datacellar:TimeSeries",
       "rdfs:range": "rdfs:Resource"
     },
-
     {
       "@id": "datacellar:DataPoint",
       "@type": "rdfs:Class",
       "rdfs:comment": "Represents an individual measurement or observation within a time series, identified by its field type, timestamp, and the measured value.",
       "rdfs:label": "DataPoint"
     },
-
     {
       "@id": "datacellar:timeStamp",
       "@type": "rdf:Property",
@@ -480,7 +469,6 @@
       "rdfs:domain": "datacellar:DataPoint",
       "rdfs:range": "xsd:float"
     },
-
     {
       "@id": "datacellar:EVChargingStation",
       "@type": "rdfs:Class",
@@ -508,7 +496,10 @@
       "@type": "rdf:Property",
       "rdfs:label": "Max Power",
       "rdfs:comment": "The maximum power output of the EV charging station (in kW).",
-      "rdfs:domain": ["datacellar:EVChargingStation", "datacellar:EnergyMeter"],
+      "rdfs:domain": [
+        "datacellar:EVChargingStation",
+        "datacellar:EnergyMeter"
+      ],
       "rdfs:range": "xsd:integer"
     },
     {
@@ -519,7 +510,6 @@
       "rdfs:domain": "datacellar:EVChargingStation",
       "rdfs:range": "xsd:string"
     },
-
     {
       "@id": "datacellar:EnergyMeter",
       "@type": "rdfs:Class",
@@ -550,14 +540,12 @@
       "rdfs:domain": "datacellar:EnergyMeter",
       "rdfs:range": "xsd:boolean"
     },
-
     {
       "@id": "datacellar:Sensor",
       "@type": "rdfs:Class",
       "rdfs:comment": "Generic sensor that produces a time series",
       "rdfs:label": "Sensor"
     },
-
     {
       "@id": "datacellar:sensorID",
       "@type": "rdf:Property",
@@ -574,7 +562,6 @@
       "rdfs:domain": "datacellar:Sensor",
       "rdfs:range": "xsd:string"
     },
-
     {
       "@id": "datacellar:EnergyStorage",
       "@type": "rdfs:Class",
@@ -613,7 +600,6 @@
       "rdfs:domain": "datacellar:EnergyStorage",
       "rdfs:range": "xsd:float"
     },
-
     {
       "@id": "datacellar:DatasetDescription",
       "@type": "rdfs:Class",
@@ -646,7 +632,6 @@
       "rdfs:range": "datacellar:DatasetField",
       "@container": "@set"
     },
-
     {
       "@id": "datacellar:DatasetField",
       "@type": "rdfs:Class",
@@ -685,7 +670,6 @@
       "rdfs:domain": "datacellar:DatasetField",
       "rdfs:range": "xsd:string"
     },
-
     {
       "@id": "datacellar:type",
       "@type": "datacellar:FieldType",
@@ -694,7 +678,6 @@
       "rdfs:domain": "datacellar:DatasetField",
       "rdfs:range": "xsd:string"
     },
-
     {
       "@id": "datacellar:FieldType",
       "@type": "rdfs:Class",
@@ -741,7 +724,6 @@
       "rdfs:domain": "datacellar:FieldType",
       "rdfs:range": "xsd:boolean"
     },
-
     {
       "@id": "datacellar:PVPanel",
       "@type": "rdfs:Class",
@@ -796,7 +778,6 @@
       "rdfs:domain": "datacellar:PVPanel",
       "rdfs:range": "xsd:string"
     },
-
     {
       "@id": "datacellar:DHW",
       "@type": "rdfs:Class",
@@ -887,7 +868,6 @@
       "rdfs:domain": "datacellar:WindTurbine",
       "rdfs:range": "xsd:string"
     },
-
     {
       "@id": "datacellar:WindStation",
       "@type": "rdfs:Class",
@@ -1012,7 +992,6 @@
       "rdfs:domain": "datacellar:BatteryOptimizationDataset",
       "rdfs:range": "xsd:decimal"
     },
-
     {
       "@id": "datacellar:PVStation",
       "@type": "rdfs:Class",
