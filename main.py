@@ -134,6 +134,18 @@ Examples:
         help="Location filter for MRAE data (default: MRA-E)",
     )
 
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "--delete-dataset",
+        type=str,
+        help="Delete a specific dataset by ID (skips data retrieval)",
+    )
+    group.add_argument(
+        "--delete-all-datasets",
+        action="store_true",
+        help="Delete all datasets in CDE (skips data retrieval)",
+    )
+
     args = parser.parse_args()
 
     # Set non-interactive mode flag
@@ -142,23 +154,25 @@ Examples:
 
     # Validate non-interactive mode arguments
     if args.non_interactive:
-        if args.dataset_type is None:
-            print_error("❌ --dataset-type is required in non-interactive mode")
-            return
-        if args.start_date is None:
-            print_error("❌ --start-date is required in non-interactive mode")
-            return
-        if args.end_date is None:
-            print_error("❌ --end-date is required in non-interactive mode")
-            return
+        # Skip validation if we are performing deletion operations
+        if not (args.delete_dataset or args.delete_all_datasets):
+            if args.dataset_type is None:
+                print_error("❌ --dataset-type is required in non-interactive mode")
+                return
+            if args.start_date is None:
+                print_error("❌ --start-date is required in non-interactive mode")
+                return
+            if args.end_date is None:
+                print_error("❌ --end-date is required in non-interactive mode")
+                return
 
-        # Validate date formats
-        try:
-            datetime.strptime(args.start_date, "%Y-%m-%d")
-            datetime.strptime(args.end_date, "%Y-%m-%d")
-        except ValueError:
-            print_error("❌ Dates must be in YYYY-MM-DD format")
-            return
+            # Validate date formats
+            try:
+                datetime.strptime(args.start_date, "%Y-%m-%d")
+                datetime.strptime(args.end_date, "%Y-%m-%d")
+            except ValueError:
+                print_error("❌ Dates must be in YYYY-MM-DD format")
+                return
 
     print_header("FAEN API ➔ CDE Integration Client")
 
@@ -176,9 +190,10 @@ Examples:
     DEFAULT_BATCH_SIZE = int(os.getenv("DEFAULT_BATCH_SIZE", str(DEFAULT_BATCH_SIZE)))
 
     # Initial confirmation to start the process
+    operation_desc = "perform dataset deletion operations" if (args.delete_dataset or args.delete_all_datasets) else "connect to FAEN API, retrieve data, and upload to CDE"
+    
     if not confirm_proceed(
-        "This script will connect to FAEN API, retrieve data, and upload to "
-        "CDE. Do you want to continue?",
+        f"This script will {operation_desc}. Do you want to continue?",
         non_interactive=NON_INTERACTIVE_MODE,
     ):
         print_info("❌ Operation cancelled by user")
@@ -245,6 +260,103 @@ Examples:
                 print_data(
                     f"{service_name.title()} Status", f"{status_emoji} {status}", 2
                 )
+
+        # Handle Deletion Requests (if any)
+        if args.delete_dataset:
+            print_section("🗑️ Dataset Deletion")
+            dataset_id = args.delete_dataset
+            
+            if not confirm_proceed(
+                f"Are you sure you want to PERMANENTLY DELETE dataset {dataset_id}?",
+                non_interactive=NON_INTERACTIVE_MODE,
+                default=False
+            ):
+                print_info("❌ Deletion cancelled by user")
+                return
+
+            if cde_client.delete_dataset(dataset_id):
+                print_success(f"✓ Dataset {dataset_id} deleted successfully")
+            else:
+                print_error(f"✗ Failed to delete dataset {dataset_id}")
+            
+            # Exit after deletion
+            return
+
+        elif args.delete_all_datasets:
+            print_section("🗑️ Bulk Dataset Deletion")
+            
+            # First fetch all datasets
+            datasets = cde_client.get_datasets()
+            
+            if not datasets:
+                print_warning("No datasets found or failed to retrieve datasets.")
+                return
+            
+            count = len(datasets)
+            print_info(f"Found {count} datasets in CDE.")
+            
+            if not confirm_proceed(
+                f"⚠️  WARNING: This will PERMANENTLY DELETE ALL {count} DATASETS from CDE!\n"
+                "Are you absolutely sure you want to proceed?",
+                non_interactive=NON_INTERACTIVE_MODE,
+                default=False
+            ):
+                print_info("❌ Bulk deletion cancelled by user")
+                return
+
+            print_info("Starting bulk deletion...")
+            success_count = 0
+            fail_count = 0
+            
+            for dataset in datasets:
+                # Try to get ID from different fields
+                dataset_id = None
+                
+                # Strategy 1: Direct ID field
+                if "id" in dataset:
+                    dataset_id = dataset["id"]
+                elif "_id" in dataset:
+                    dataset_id = dataset["_id"]
+                elif "datasetId" in dataset:
+                    dataset_id = dataset["datasetId"]
+                
+                # Strategy 2: Extract from URI (e.g. http://datacellar.org/datasets/UUID)
+                elif "uri" in dataset and isinstance(dataset["uri"], dict) and "@id" in dataset["uri"]:
+                    uri_url = dataset["uri"]["@id"]
+                    if "/" in uri_url:
+                        dataset_id = uri_url.split("/")[-1]
+                
+                # Strategy 3: Extract from top-level @id if present
+                elif "@id" in dataset:
+                     uri_url = dataset["@id"]
+                     if "/" in uri_url:
+                        dataset_id = uri_url.split("/")[-1]
+
+                # Use 'name' field if 'datacellar:name' is missing, or fallback to Unknown
+                dataset_name = dataset.get("datacellar:name", dataset.get("name", "Unknown Name"))
+                
+                if not dataset_id:
+                    print_warning(f"⚠ Skipping dataset with no ID: {dataset_name}")
+                    continue
+                    
+                print_info(f"Deleting {dataset_name} ({dataset_id})...")
+                if cde_client.delete_dataset(dataset_id):
+                    success_count += 1
+                else:
+                    fail_count += 1
+            
+            print_section("🗑️ Deletion Summary")
+            print_data("Total Datasets", str(count), 1)
+            print_data("Deleted", str(success_count), 1)
+            print_data("Failed", str(fail_count), 1)
+            
+            if fail_count == 0:
+                print_success("✓ All datasets deleted successfully")
+            else:
+                print_warning(f"⚠ Completed with {fail_count} failures")
+                
+            # Exit after deletion
+            return
 
         # Step 2: Test authentication with FAEN
         if faen_client.authenticate():

@@ -112,6 +112,36 @@ class CDEApiClient:
             print_error(f"✗ Dataset file not found: {dataset_file_path}")
             return None
     
+    def get_datasets(self) -> List[Dict[str, Any]]:
+        """
+        Get all datasets from CDE
+        
+        Returns:
+            List of dataset dictionaries or None if failed
+        """
+        datasets_url = urljoin(self.base_url + '/', 'api/dataset')
+        
+        try:
+            print_info("Fetching datasets from CDE...")
+            response = self.session.get(
+                datasets_url,
+                timeout=30,
+                headers={'Content-Type': 'application/json'}
+            )
+            
+            if response.status_code == 200:
+                datasets = response.json()
+                print_success(f"✓ Retrieved {len(datasets)} datasets")
+                return datasets
+            else:
+                print_error(f"✗ Failed to get datasets with status {response.status_code}")
+                print_data("Response content", response.text[:500], 1)
+                return None
+                
+        except requests.exceptions.RequestException as e:
+            print_error(f"✗ Failed to get datasets: {e}")
+            return None
+
     def delete_dataset(self, dataset_id: str) -> bool:
         """
         Delete a dataset from CDE by its ID
