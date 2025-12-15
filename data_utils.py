@@ -18,6 +18,7 @@ from console_utils import (
     print_warning,
 )
 from mrae import MRAEDatasetGenerator, MRAEDataTransformer
+from edg import EDGDatasetGenerator, EDGDataTransformer
 
 # Geographic coordinates for Bimenes (LEC location)
 BIMENES_LATITUDE = 43.318200
@@ -923,3 +924,48 @@ def transform_mrae_to_datapoints(
         List of datapoint dictionaries ready for CDE API
     """
     return MRAEDataTransformer.transform_to_datapoints(mrae_data, timeseries_mapping)
+
+
+def generate_edg_dataset_definition(
+    start_date: Union[date, datetime],
+    end_date: Union[date, datetime],
+    aggregated_data: List[Dict[str, Any]] = None,
+    location: str = "Bankya, Bulgaria",
+) -> Dict[str, Any]:
+    """
+    Generate dataset definition for EDG West Bankya data
+
+    Delegates to EDGDatasetGenerator for implementation.
+    This function provides backward compatibility.
+
+    Args:
+        start_date: Start date (date or datetime object)
+        end_date: End date (date or datetime object)
+        aggregated_data: List of aggregated EDG records (optional)
+        location: Location identifier (default: "Bankya, Bulgaria")
+
+    Returns:
+        Dataset definition dictionary in JSON-LD format with 2 fields
+    """
+    return EDGDatasetGenerator.generate_dataset_definition(
+        start_date, end_date, aggregated_data, location
+    )
+
+
+def transform_edg_to_datapoints(
+    aggregated_data: List[Dict[str, Any]], timeseries_mapping: Dict[str, str]
+) -> List[Dict[str, Any]]:
+    """
+    Transform EDG data into CDE datapoint format
+
+    Delegates to EDGDataTransformer for implementation.
+    This function provides backward compatibility.
+
+    Args:
+        aggregated_data: List of aggregated EDG records
+        timeseries_mapping: Dictionary mapping field names to timeseries IDs
+
+    Returns:
+        List of datapoint dictionaries ready for CDE API
+    """
+    return EDGDataTransformer.transform_to_datapoints(aggregated_data, timeseries_mapping)

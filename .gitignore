@@ -30,3 +30,4 @@ datasets/*.json
 .env.bak
 AGENTS.md
 datasets/csv
+.claude

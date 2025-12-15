@@ -37,6 +37,11 @@ from data_utils import (
     transform_mrae_to_datapoints,
     transform_weather_to_datapoints,
 )
+from edg import (
+    EDGDataLoader,
+    EDGDatasetGenerator,
+    EDGDataTransformer,
+)
 from faen_client import FaenApiClient, create_full_day_query, create_weather_query
 from validator import DatasetValidator
 
@@ -96,7 +101,10 @@ Examples:
   
   # Non-interactive mode - all dataset types
   python main.py --dataset-type 5 --start-date 2025-05-01 --end-date 2025-05-02
-  
+
+  # Non-interactive mode - EDG West Bankya data
+  python main.py --dataset-type 6 --start-date 2022-01-01 --end-date 2022-12-31
+
   # With custom record limit
   python main.py --dataset-type 1 --start-date 2025-05-01 --end-date 2025-05-02 --limit 100
         """,
@@ -105,8 +113,8 @@ Examples:
     parser.add_argument(
         "--dataset-type",
         type=int,
-        choices=[1, 2, 3, 4, 5],
-        help="Dataset type: 1=Building Consumption, 2=Photovoltaic Generation, 3=Both, 4=MRAE Charging, 5=All types",
+        choices=[1, 2, 3, 4, 5, 6],
+        help="Dataset type: 1=Building Consumption, 2=Photovoltaic Generation, 3=Both, 4=MRAE Charging, 5=All types, 6=EDG West Bankya",
     )
 
     parser.add_argument(
@@ -132,6 +140,13 @@ Examples:
         type=str,
         default="MRA-E",
         help="Location filter for MRAE data (default: MRA-E)",
+    )
+
+    parser.add_argument(
+        "--edg-csv-path",
+        type=str,
+        default=None,
+        help="Path to EDG CSV file (default: edg-data/bankya.csv)",
     )
 
     group = parser.add_mutually_exclusive_group()
@@ -382,6 +397,7 @@ Examples:
                 create_consumption = choice in ["1", "3", "5"]
                 create_generation = choice in ["2", "3", "5"]
                 create_mrae = choice in ["4", "5"]
+                create_edg = choice in ["6"]
             else:
                 # Interactive mode: ask user
                 print_section("📊 Dataset Type Selection")
@@ -393,13 +409,14 @@ Examples:
                 print_data("3", "Both Consumption and Generation", 1)
                 print_data("4", "MRAE Charging Infrastructure (EV charging data)", 1)
                 print_data("5", "All types (creates separate datasets)", 1)
+                print_data("6", "EDG West Bankya (consumption + generation from CSV)", 1)
 
                 while True:
                     try:
-                        choice = input("\nSelect dataset type (1-5): ").strip()
-                        if choice in ["1", "2", "3", "4", "5"]:
+                        choice = input("\nSelect dataset type (1-6): ").strip()
+                        if choice in ["1", "2", "3", "4", "5", "6"]:
                             break
-                        print_warning("Please enter 1, 2, 3, 4, or 5")
+                        print_warning("Please enter 1, 2, 3, 4, 5, or 6")
                     except (EOFError, KeyboardInterrupt):
                         print_info("\n❌ Operation cancelled by user")
                         return
@@ -407,6 +424,7 @@ Examples:
                 create_consumption = choice in ["1", "3", "5"]
                 create_generation = choice in ["2", "3", "5"]
                 create_mrae = choice in ["4", "5"]
+                create_edg = choice in ["6"]
 
             # Build selection description
             selected_types = []
@@ -416,6 +434,8 @@ Examples:
                 selected_types.append("Generation + Weather")
             if create_mrae:
                 selected_types.append("MRAE Charging")
+            if create_edg:
+                selected_types.append("EDG West Bankya")
             print_info(f"Selected: {', '.join(selected_types)}")
 
             # Get user input for date range and limit
@@ -446,6 +466,7 @@ Examples:
             generation_data = []
             weather_data = []
             mrae_data = []
+            edg_data = []
 
             # Query data based on selection
             if create_consumption:
@@ -481,12 +502,20 @@ Examples:
                 )
                 print_data("MRAE records", str(len(mrae_data)), 1)
 
-            print_section("📋 FAEN Results Summary")
+            if create_edg:
+                print_section("🇧🇬 Loading EDG West Bankya Data")
+                edg_csv_path = args.edg_csv_path if hasattr(args, "edg_csv_path") else None
+                edg_loader = EDGDataLoader(edg_csv_path)
+                edg_data = edg_loader.get_aggregated_data(start_date, end_date)
+                print_data("EDG aggregated records", str(len(edg_data)), 1)
+
+            print_section("📋 Data Retrieval Summary")
             total_records = (
                 len(consumption_data)
                 + len(generation_data)
                 + len(weather_data)
                 + len(mrae_data)
+                + len(edg_data)
             )
             print_data("Total records retrieved", str(total_records), 1)
             if create_consumption:
@@ -496,6 +525,8 @@ Examples:
                 print_data("Weather records", str(len(weather_data)), 1)
             if create_mrae:
                 print_data("MRAE records", str(len(mrae_data)), 1)
+            if create_edg:
+                print_data("EDG records", str(len(edg_data)), 1)
 
             # Confirmation point 2: After data retrieval
             if not confirm_proceed(
@@ -507,8 +538,8 @@ Examples:
                 return
 
             # Print first few records
-            if consumption_data or generation_data or weather_data or mrae_data:
-                print_section("📊 Sample FAEN Data")
+            if consumption_data or generation_data or weather_data or mrae_data or edg_data:
+                print_section("📊 Sample Data")
 
                 # Show consumption data samples
                 if consumption_data:
@@ -579,6 +610,23 @@ Examples:
                         remaining = len(mrae_data) - SAMPLE_RECORDS_DISPLAY
                         print(
                             f"\n{Colors.GRAY}  ... and {remaining} more MRAE records"
+                            f"{Colors.RESET}"
+                        )
+
+                # Show EDG data samples
+                if edg_data:
+                    print_info("EDG West Bankya Data Sample:")
+                    for i, record in enumerate(edg_data[:SAMPLE_RECORDS_DISPLAY]):
+                        print(
+                            f"\n{Colors.BOLD}{Colors.MAGENTA}  EDG Record {i+1}:"
+                            f"{Colors.RESET}"
+                        )
+                        print_json_preview(record)
+
+                    if len(edg_data) > SAMPLE_RECORDS_DISPLAY:
+                        remaining = len(edg_data) - SAMPLE_RECORDS_DISPLAY
+                        print(
+                            f"\n{Colors.GRAY}  ... and {remaining} more EDG records"
                             f"{Colors.RESET}"
                         )
 
@@ -682,6 +730,37 @@ Examples:
                 elif create_mrae and not mrae_data:
                     print_warning("⚠ Cannot create MRAE dataset - no data available")
                     print_data("MRAE records", str(len(mrae_data)), 1)
+
+                if create_edg and edg_data:
+                    print_section("📋 EDG West Bankya Dataset Generation")
+                    print_info(
+                        "Generating EDG West Bankya dataset definition..."
+                    )
+
+                    edg_dataset = EDGDatasetGenerator.generate_dataset_definition(
+                        start_date, end_date, edg_data
+                    )
+                    datasets_to_process.append(
+                        {
+                            "definition": edg_dataset,
+                            "type": "edg",
+                            "data": edg_data,
+                            "name": "EDG West Bankya Dataset",
+                        }
+                    )
+
+                    print_success("✓ EDG dataset definition generated")
+                    print_data(
+                        "Dataset name",
+                        edg_dataset.get("datacellar:name", "Unknown"),
+                        1,
+                    )
+                    timeseries_list = edg_dataset.get("datacellar:timeSeries", [])
+                    print_data("Number of timeseries", str(len(timeseries_list)), 1)
+
+                elif create_edg and not edg_data:
+                    print_warning("⚠ Cannot create EDG dataset - no data available")
+                    print_data("EDG records", str(len(edg_data)), 1)
 
                 if not datasets_to_process:
                     print_error("❌ No datasets can be generated with available data")
@@ -1021,6 +1100,26 @@ Examples:
                                 "✗ No valid timeseries mappings found for MRAE data"
                             )
 
+                    elif dataset_type == "edg":
+                        # Create mapping for EDG fields using datasetField information from CDE
+                        timeseries_mapping = EDGDataTransformer.create_timeseries_mapping(
+                            timeseries_list
+                        )
+
+                        print_info(
+                            f"Final EDG timeseries mapping: {timeseries_mapping}"
+                        )
+
+                        if timeseries_mapping:
+                            datapoints = EDGDataTransformer.transform_to_datapoints(
+                                dataset_info["data"], timeseries_mapping
+                            )
+                        else:
+                            datapoints = []
+                            print_error(
+                                "✗ No valid timeseries mappings found for EDG data"
+                            )
+
                     if datapoints:
                         # Upload datapoints in batches
                         batch_result = cde_client.add_datapoints_batch(
@@ -1054,7 +1153,7 @@ Examples:
                 print_header("✅ FAEN ➔ CDE Integration Completed")
 
                 # Data retrieval summary
-                print_success(f"✓ Successfully retrieved {total_records} FAEN records")
+                print_success(f"✓ Successfully retrieved {total_records} records")
                 if create_consumption:
                     print_success(f"  • {len(consumption_data)} consumption records")
                 if create_generation:
@@ -1062,6 +1161,8 @@ Examples:
                     print_success(f"  • {len(weather_data)} weather records")
                 if create_mrae:
                     print_success(f"  • {len(mrae_data)} MRAE charging records")
+                if create_edg:
+                    print_success(f"  • {len(edg_data)} EDG West Bankya records")
 
                 # Dataset generation summary
                 if datasets_to_process:
