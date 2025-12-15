@@ -29,3 +29,4 @@ datasets/*.json
 .env
 .env.bak
 AGENTS.md
+datasets/csv
